@@ -1,10 +1,10 @@
 import express from 'express';
 import { ensureAuthenticated } from '../middleware/Auth.js';
-import { addMed, getMedsByUser } from '../Controllers/MedController.js';
+import { addDiet, getDiet } from '../Controllers/DietController.js';
 const router = express.Router();
 
-router.post('/', ensureAuthenticated, addMed);
-router.get('/', ensureAuthenticated, getMedsByUser);
+router.post('/', ensureAuthenticated, addDiet);
+router.get('/', ensureAuthenticated, getDiet);
 
 
 

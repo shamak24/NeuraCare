@@ -9,6 +9,7 @@ import VitalRouter from './routers/VitalRouter.js';
 import ConnectDBWithRetry from './Models/db.js';
 import cookieParser from 'cookie-parser';
 import MedRouter from './routers/MedRouter.js';
+import DietRouter from './routers/DietRouter.js';
 
 const app = express();
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(cors());
 app.use('/auth', AuthRouters);
 app.use('/vitals', VitalRouter);
 app.use('/meds', MedRouter);
+app.use('/diet', DietRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello from NeuraCare backend!');

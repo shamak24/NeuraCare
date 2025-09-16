@@ -9,35 +9,35 @@ const dietSchema = new mongoose.Schema({
     },
     vegan:{
         type: Boolean,
-        required: true
+        default: false,
     },
     vegetarian:{
         type: Boolean,
-        required: true
+        default: false
     },
     glutenFree:{
         type: Boolean,
-        required: true
+        default: false
     },
     lactoseFree:{
         type: Boolean,
-        required: true
+        default: false
     },
     keto:{
         type: Boolean,
-        required: true
+        default: false
     },
     paleo:{
         type: Boolean,
-        required: true
+        default: false
     },
     lowFodmap:{
         type: Boolean,
-        required: true
+        default: false
     },
     pescatarian:{
         type: Boolean,
-        required: true
+        default: false
     },
     allergies:{
         type: [String],
