@@ -12,6 +12,7 @@ const addVital = async (req, res)=>{
         await vital.save();
         res.status(201).json({ message: "Vital added successfully", success: true });
     }catch(err){
+        console.log(err);
         res.status(500).json({ message: "Internal server error", success: false });
     }
 }
@@ -22,6 +23,7 @@ const getVitalsByUser = async (req, res)=>{
         const vitals = await VitalModel.find({userId}).sort({ createdAt: -1 });
         res.status(200).json({ vitals, success: true });
     }catch(err){
+        console.log(err);
         res.status(500).json({ message: "Internal server error", success: false });
     }
 }

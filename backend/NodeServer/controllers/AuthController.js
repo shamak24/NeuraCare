@@ -69,6 +69,7 @@ const login = async (req, res) => {
       name: user.name,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({
       message: "Internal server errror",
       success: false,
@@ -84,6 +85,7 @@ const logout = async (req, res) => {
       success: true,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({
       message: "Internal server error",
       success: false,

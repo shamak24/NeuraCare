@@ -11,6 +11,7 @@ const ensureAuthenticated = async (req, res, next) => {
         req.user = await UserModel.findById(decoded._id);
         next();
     } catch (err) {
+        console.error(err);
         return res.status(403)
             .json({ message: 'Unauthorized, JWT token wrong or expired' });
     }

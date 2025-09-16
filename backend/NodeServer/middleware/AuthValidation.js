@@ -8,6 +8,7 @@ const signupValidation = (req, res, next) => {
     });
     const { error } = schema.validate(req.body);
     if (error) {
+        console.error(error.details[0].message);
         return res.status(400).json({ message: error.details[0].message });
     }
     next();
@@ -20,6 +21,7 @@ const loginValidation = (req, res, next) => {
     });
     const { error } = schema.validate(req.body);
     if (error) {
+        console.error(error.details[0].message);
         return res.status(400).json({ message: error.details[0].message });
     }
     next();
