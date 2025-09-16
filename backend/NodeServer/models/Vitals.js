@@ -4,22 +4,35 @@ const vitalSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: true,
+        unique: true // one-to-one relation
     },
-    bloodPressure:{
+    bloodPressure: {
         type: Number,
         required: true
     },
-    heartRate:{
+    heartRate: {
         type: Number,
         required: true
     },
-    sugarLevel:{
+    sugarLevel: {
         type: Number,
         required: false
+    },
+    weight: {
+        type: Number,
+        required: true
+    },
+    chlorestrol: {
+        type: Number,
+        required: false
+    },
+    activityLevel: {
+        type: String,
+        required: true
     }
 },
-{timestamps: true} // This will add createdAt and updatedAt fields
+{ timestamps: true } // Adds createdAt and updatedAt fields
 );
 
 const VitalModel = mongoose.model("Vital", vitalSchema);
