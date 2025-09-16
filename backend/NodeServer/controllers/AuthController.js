@@ -80,4 +80,18 @@ const logout = async (req, res) => {
     }
 }
 
-export { signup, login, logout };
+const profile = async (req, res) => {
+    try {
+        // req.user should contain the id from JWT
+        const user = await UserModel.findById(req.user._id).select('-password'); // exclude password
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        res.json(user); // return user data
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+export { signup, login, logout, profile };

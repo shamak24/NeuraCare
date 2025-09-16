@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import './Models/db.js';
 import AuthRouters from './routers/AuthRouters.js';
 import ProductRouter from './routers/ProductRouter.js';
+import VitalRouter from './routers/VitalRouter.js';
 
 const app = express();
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/auth', AuthRouters);
 app.use('/products', ProductRouter);
+app.use('/vitals', VitalRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello from NeuraCare backend!');
