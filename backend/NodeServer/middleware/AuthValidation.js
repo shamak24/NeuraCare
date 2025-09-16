@@ -25,12 +25,6 @@ const loginValidation = (req, res, next) => {
     next();
 };
 
-const logoutValidation = (req, res, next) =>{
-    const token = req.headers['authorization'];
-    if(!token){
-        return res.status(400).json({message: "No token provided"});
-    }
-    next();
-}
 
-export { signupValidation, loginValidation, logoutValidation };
+
+export { signupValidation, loginValidation };
