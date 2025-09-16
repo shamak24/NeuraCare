@@ -3,9 +3,15 @@ import VitalModel from "../models/Vitals.js";
 
 const addVital = async (req, res)=>{
     try{
-        const { bloodPressure, heartRate, sugarLevel} = req.body;
+        const { bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel } = req.body;
         const userId = req.user._id;
-        const vital = new VitalModel({ userId, bloodPressure, heartRate, sugarLevel });
+
+        //ERROR HANDLING TO BE DONE
+
+        if(await VitalModel.findOne({ userId })){
+            return res.status(400).json({ message: "Vital for this user already exists", success: false });
+        }
+        const vital = new VitalModel({ userId, bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel });
         await vital.save();
         res.status(201).json({ message: "Vital added successfully", success: true });
     }catch(err){

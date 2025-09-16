@@ -23,14 +23,14 @@ const vitalSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    chlorestrol: {
+    cholesterol: {
         type: Number,
         required: false
     },
     activityLevel: {
         type: String,
         required: true
-    }
+    },
 },
 { timestamps: true } // Adds createdAt and updatedAt fields
 );

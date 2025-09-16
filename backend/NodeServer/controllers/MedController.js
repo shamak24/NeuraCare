@@ -1,4 +1,4 @@
-import MedModel from '../models/Meds.js';
+import MedModel from '../models/meds.js';
 
 const addMed = async (req, res) => {
     try{
