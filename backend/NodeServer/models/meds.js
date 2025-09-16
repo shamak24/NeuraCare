@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const medsSchema = new mongoose.Schema({
-    users: [{
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-    }],
+    },
     medName: {
         type: String,
         required: true
@@ -27,11 +27,9 @@ const medsSchema = new mongoose.Schema({
             hr: { type: Number },
             min: { type: Number }
         },
-        required: false,
     },
     number: {
         type: Number,
-        required: true,
         default: 1
     }
 },

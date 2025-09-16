@@ -13,4 +13,8 @@ router.post('/logout', logout);
 
 router.get('/profile', ensureAuthenticated, profile);
 
+router.post('/verify-token', ensureAuthenticated, (req, res) => {
+    res.status(200).json({ message: 'Token is valid', user: req.user });
+});
+
 export default router;

@@ -1,7 +1,4 @@
-import mongoose from "mongoose";
-import UserModel from "../Models/User.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+
 import VitalModel from "../models/Vitals.js";
 
 const addVital = async (req, res)=>{
