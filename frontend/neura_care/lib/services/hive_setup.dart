@@ -7,5 +7,6 @@ import 'package:neura_care/models/user.dart';
 Future <void> setupHive() async {
   await Hive.initFlutter();
   // Register adapters here
+  await Hive.openBox<User>('userBox');
   Hive.registerAdapter(UserAdapter());
 }

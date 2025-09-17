@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/models/user.dart';
-import 'package:neura_care/providers/user_provider.dart';
+import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/screens/auth/login.dart';
 import 'package:neura_care/screens/home.dart';
 import 'package:neura_care/services/hive_setup.dart';
@@ -52,7 +52,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
-          } else if (snapshot.hasError) {
+          } else if (snapshot.hasError && snapshot.error.toString().contains('No internet connection')) {
             return Scaffold(
               body: Center(
                 child: Column(
