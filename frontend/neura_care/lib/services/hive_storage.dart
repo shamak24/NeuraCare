@@ -7,6 +7,9 @@ User? getUser(){
   return userBox.get('user');
 }
 
+Future<void>  saveUser(User user) async {
+  await userBox.put('user', user);
+}
 
 Future<void> removeUser() async {
   await userBox.delete('user');
