@@ -30,6 +30,8 @@ const signup = async (req, res) => {
       message: "Signup successfully",
       success: true,
       token,
+      name: userModel.name,
+      email: userModel.email,
     });
   } catch (err) {
     res.status(500).json({

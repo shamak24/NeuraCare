@@ -1,12 +1,19 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:neura_care/models/diet.dart';
+import 'package:neura_care/models/meals.dart';
+import 'package:neura_care/models/prev_history.dart';
 import 'package:neura_care/models/user.dart';
+import 'package:neura_care/models/vitals.dart';
 
 
 
 
 Future <void> setupHive() async {
   await Hive.initFlutter();
-  // Register adapters here
-  await Hive.openBox<User>('userBox');
   Hive.registerAdapter(UserAdapter());
+  Hive.registerAdapter(DietAdapter());
+  Hive.registerAdapter(PreviousHistoryAdapter());
+  Hive.registerAdapter(VitalsAdapter());
+  Hive.registerAdapter(MealsAdapter());
+  await Hive.openBox<User>('userBox');
 }
