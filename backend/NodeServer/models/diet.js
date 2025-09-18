@@ -29,7 +29,7 @@ const dietSchema = new mongoose.Schema({
     },
     cuisinePreferences:{
         type: [String],
-        enum: ["North", "South", "Chinese"],
+        enum: ["North", "South", "Indian", "Mexican", "Italian", "West", "Continental"],
         default: []
     },
     allergies:{
