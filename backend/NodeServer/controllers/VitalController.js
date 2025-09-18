@@ -3,7 +3,7 @@ import VitalModel from "../models/Vitals.js";
 
 const addVital = async (req, res)=>{
     try{
-        const { bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel } = req.body;
+        const { bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age } = req.body;
         const userId = req.user._id;
 
         //ERROR HANDLING TO BE DONE
@@ -11,7 +11,7 @@ const addVital = async (req, res)=>{
         if(await VitalModel.findOne({ userId })){
             return res.status(400).json({ message: "Vital for this user already exists", success: false });
         }
-        const vital = new VitalModel({ userId, bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel });
+        const vital = new VitalModel({ userId, bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age });
         await vital.save();
         res.status(201).json({ message: "Vital added successfully", success: true });
     }catch(err){

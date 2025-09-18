@@ -1,13 +1,13 @@
 import DietModel from "../models/diet.js";
 
 const addDiet = async (req, res)=>{
-    const { vegan, vegetarian, glutenFree, lactoseFree, keto, paleo, lowFodmap, pescatarian, allergies } = req.body || "false";
+    const { vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies } = req.body || "false";
     const userId = req.user._id;
-    if(!vegan && !vegetarian && !glutenFree && !lactoseFree && !keto && !paleo && !lowFodmap && !pescatarian && !allergies){
+    if(!vegan && !vegetarian && !glutenFree && !lactoseFree && !keto && !cuisinePreferences && !allergies){
         return res.status(400).json({ message: "dietary preferences must be specified." });
     }
     try{
-        const diet = new DietModel({ userId, vegan, vegetarian, glutenFree, lactoseFree, keto, paleo, lowFodmap, pescatarian, allergies });
+        const diet = new DietModel({ userId, vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies });
         await diet.save();
         res.status(201).json({ message: "Dietary preferences added successfully.", diet });
     }catch(error){
