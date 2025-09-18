@@ -7,6 +7,7 @@ import 'package:neura_care/models/user.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/screens/auth/login.dart';
 import 'package:neura_care/screens/home.dart';
+import 'package:neura_care/services/api.dart';
 import 'package:neura_care/services/hive_setup.dart';
 
 void main() async {
@@ -39,7 +40,20 @@ class _MyAppState extends ConsumerState<MyApp> {
       if (!await InternetConnection().hasInternetAccess) {
         throw Exception('No internet connection');
       }
+
+      print('Loading user data from Hive');
       ref.read(userProviderNotifier.notifier).loadUserData();
+      print('User data loaded');
+      User user = ref.read(userProviderNotifier);
+      try{
+        if (user != User.empty()) {
+          await verifyToken(user.token!);
+        }
+      } catch (e) {
+        print('Error verifying token: $e');
+        ref.read(userProviderNotifier.notifier).clearUser();
+      }
+
     }
 
     return MaterialApp(

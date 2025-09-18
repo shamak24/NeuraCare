@@ -11,6 +11,6 @@ Future<void>  saveUser(User user) async {
   await userBox.put('user', user);
 }
 
-Future<void> removeUser() async {
+Future<void> clearUserData() async {
   await userBox.delete('user');
 }

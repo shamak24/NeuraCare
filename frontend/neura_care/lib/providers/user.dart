@@ -9,7 +9,17 @@ class UserProvider extends StateNotifier<User> {
      User? user = getUser();
      if (user != null) {
        state = user;
-     } 
+     }
+
+  }
+  void setUser(User user) {
+    saveUser(user);
+    state = user;
+  }
+  void clearUser() {
+    clearUserData();
+    state = User.empty();
+    
   }
   
 }
