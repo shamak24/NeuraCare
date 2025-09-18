@@ -27,17 +27,10 @@ const dietSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    paleo:{
-        type: Boolean,
-        default: false
-    },
-    lowFodmap:{
-        type: Boolean,
-        default: false
-    },
-    pescatarian:{
-        type: Boolean,
-        default: false
+    cuisinePreferences:{
+        type: [String],
+        enum: ["North", "South", "Chinese"],
+        default: []
     },
     allergies:{
         type: [String],
