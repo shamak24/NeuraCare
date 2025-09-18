@@ -6,6 +6,9 @@ const addDiet = async (req, res)=>{
     if(!vegan && !vegetarian && !glutenFree && !lactoseFree && !keto && !cuisinePreferences && !allergies){
         return res.status(400).json({ message: "dietary preferences must be specified." });
     }
+    if(await DietModel.findOne({userId})){
+        return res.status(409).json({ message: "Dietary preferences already exist for this user." });
+    }
     try{
         const diet = new DietModel({ userId, vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies });
         await diet.save();
