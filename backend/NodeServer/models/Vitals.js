@@ -32,6 +32,15 @@ const vitalSchema = new mongoose.Schema({
         enum: ["Sedentary", "Lightly Active", "Active", "Very Active"],
         required: true,
     },
+    gender:{
+        type: String,
+        enum: ["Male", "Female", "Other"],
+        required: true,
+    },
+    age:{
+        type: Number,
+        required: true,
+    }
 },
 { timestamps: true } // Adds createdAt and updatedAt fields
 );
