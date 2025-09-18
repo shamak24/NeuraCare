@@ -9,7 +9,7 @@ const addVital = async (req, res)=>{
         //ERROR HANDLING TO BE DONE
 
         if(await VitalModel.findOne({ userId })){
-            return res.status(400).json({ message: "Vital for this user already exists", success: false });
+            return res.status(409).json({ message: "Vital for this user already exists", success: false });
         }
         const vital = new VitalModel({ userId, bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age });
         await vital.save();
@@ -23,7 +23,7 @@ const addVital = async (req, res)=>{
 const getVitalsByUser = async (req, res)=>{
     try{
         const userId = req.user._id;
-        const vitals = await VitalModel.find({userId}).sort({ createdAt: -1 });
+        const vitals = await VitalModel.findOne({userId});
         if(!vitals){
             return res.status(404).json({ message: "No vitals found for this user", success: false });
         }
