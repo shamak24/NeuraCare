@@ -4,18 +4,21 @@ part "vitals.g.dart";
 @HiveType(typeId: 1)
 class Vitals {
   @HiveField(0)
-  int bloodPressure;
+  double bloodPressure;
   @HiveField(1)
   int heartRate;
   @HiveField(2)
-  int sugarLevel;
+  double sugarLevel;
   @HiveField(3)
-  int weight;
+  double weight;
   @HiveField(4)
-  int cholesterol;
+  double cholesterol;
   @HiveField(5)
   String activityLevel;
-
+  @HiveField(6)
+  String gender;
+  @HiveField(7)
+  int age;
   Vitals({
     required this.bloodPressure,
     required this.heartRate,
@@ -23,15 +26,63 @@ class Vitals {
     required this.weight,
     required this.cholesterol,
     required this.activityLevel,
+    required this.gender,
+    required this.age,
   });
   factory Vitals.empty() {
     return Vitals(
-      bloodPressure: 0,
+      bloodPressure: 0.0,
       heartRate: 0,
-      sugarLevel: 0,
-      weight: 0,
-      cholesterol: 0,
+      sugarLevel: 0.0,
+      weight: 0.0,
+      cholesterol: 0.0,
       activityLevel: '',
+      gender: '',
+      age: 0,
     );
+  }
+
+  factory Vitals.fromJson(Map<String, dynamic> json) {
+    return Vitals(
+      bloodPressure: json['bloodPressure'].toDouble(),
+      heartRate: json['heartRate'],
+      sugarLevel: json['sugarLevel'].toDouble(),
+      weight: json['weight'].toDouble(),
+      cholesterol: json['cholesterol'].toDouble(),
+      activityLevel: json['activityLevel'],
+      gender: json['gender'],
+      age: json['age'],
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Vitals &&
+        bloodPressure == other.bloodPressure &&
+        heartRate == other.heartRate &&
+        sugarLevel == other.sugarLevel &&
+        weight == other.weight &&
+        cholesterol == other.cholesterol &&
+        activityLevel == other.activityLevel &&
+        age == other.age &&
+        gender == other.gender;
+  }
+
+  @override
+  int get hashCode {
+    return bloodPressure.hashCode ^
+        heartRate.hashCode ^
+        sugarLevel.hashCode ^
+        weight.hashCode ^
+        cholesterol.hashCode ^
+        activityLevel.hashCode ^
+        gender.hashCode ^
+        age.hashCode;
+  }
+
+  @override
+  String toString() {
+    return 'Vitals(bloodPressure: $bloodPressure, heartRate: $heartRate, sugarLevel: $sugarLevel, weight: $weight, cholesterol: $cholesterol, activityLevel: $activityLevel, gender: $gender, age: $age)';
   }
 }

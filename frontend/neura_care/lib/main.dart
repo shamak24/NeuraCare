@@ -4,9 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/models/user.dart';
+import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/providers/user.dart';
+import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/login.dart';
 import 'package:neura_care/screens/home.dart';
+import 'package:neura_care/screens/onboarding.dart';
 import 'package:neura_care/services/api.dart';
 import 'package:neura_care/services/hive_setup.dart';
 
@@ -40,20 +43,22 @@ class _MyAppState extends ConsumerState<MyApp> {
       if (!await InternetConnection().hasInternetAccess) {
         throw Exception('No internet connection');
       }
-
-      print('Loading user data from Hive');
       ref.read(userProviderNotifier.notifier).loadUserData();
-      print('User data loaded');
       User user = ref.read(userProviderNotifier);
-      try{
+      try {
         if (user != User.empty()) {
           await verifyToken(user.token!);
         }
       } catch (e) {
         print('Error verifying token: $e');
         ref.read(userProviderNotifier.notifier).clearUser();
+        ref.read(vitalsProviderNotifier.notifier).clearVitals();
       }
-
+      try {
+        ref.read(vitalsProviderNotifier.notifier).loadVitalsData();
+      } catch (e) {
+        print('Error loading vitals: $e');
+      }
     }
 
     return MaterialApp(
@@ -66,7 +71,8 @@ class _MyAppState extends ConsumerState<MyApp> {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
-          } else if (snapshot.hasError && snapshot.error.toString().contains('No internet connection')) {
+          } else if (snapshot.hasError &&
+              snapshot.error.toString().contains('No internet connection')) {
             return Scaffold(
               body: Center(
                 child: Column(
@@ -86,6 +92,12 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ),
               ),
             );
+          } else if (snapshot.hasError){
+            return Scaffold(
+              body: Center(
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            );
           }
           return Consumer(
             builder: (context, ref, _) {
@@ -93,7 +105,11 @@ class _MyAppState extends ConsumerState<MyApp> {
               if (userProvider == User.empty()) {
                 return const LoginScreen();
               } else {
-                return const HomeScreen();
+                final vitalsProvider = ref.watch(vitalsProviderNotifier);
+                if (vitalsProvider == Vitals.empty()) {
+                  return const OnboardingScreen();
+                }
+                return HomeScreen();
               }
             },
           );
