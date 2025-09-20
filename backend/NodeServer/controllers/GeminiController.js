@@ -25,23 +25,23 @@ const generateChat = async (req, res) => {
         prompt = `Based on the following user's medical history: ${JSON.stringify(history)}, 
                  ${message}. Please provide a detailed 
                  but easy to understand response with possible causes and when to seek 
-                 medical attention.`;
+                 medical attention.Generated text should not exceed 30 words.`;
         break;
       case 'diet':
         const dietPreferences = await DietModel.findOne({ userId });
         prompt = `Given these dietary preferences and restrictions: ${JSON.stringify(dietPreferences)}, 
-                 ${message}. Please suggest a balanced diet plan.`;
+                 ${message}. Please suggest a balanced diet plan. `;
         break;
       case 'lifestyle':
         const vitals = await VitalModel.findOne({ userId });
         prompt = `Considering these vital statistics: ${JSON.stringify(vitals)}, 
-                 ${message}. Please provide lifestyle recommendations.`;
+                 ${message}. Please provide lifestyle recommendations. Generated text should not exceed 30 words.`;
         break;
       case 'diseases':
         const prevHistory = await PrevHistoryModel.findOne({userId, diseases});
         const meds = await MedModel.find({userId, medName});
         prompt = `Given the user's previous disease history: ${JSON.stringify(prevHistory)}, with current medications: ${JSON.stringify(meds)},
-        ${message}. Please provide information on managing and preventing recurrence.`;
+        ${message}. Please provide information on managing and preventing recurrence. Generated text should not exceed 30 words.`;
         break;
     }
 
