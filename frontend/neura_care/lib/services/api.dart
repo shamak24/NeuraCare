@@ -127,6 +127,8 @@ Future<void> createUserVitals(String token, Vitals vitals) async {
       'activityLevel': vitals.activityLevel,
       'gender': vitals.gender,
       'age': vitals.age,
+      'height': vitals.height,
+
     }),
   );
 
@@ -141,6 +143,25 @@ Future<void> createUserVitals(String token, Vitals vitals) async {
       throw Exception('Vitals already exist for user');
     } else {
       throw Exception('Failed to create vitals');
+    }
+  }
+}
+
+Future<double> getScore(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/healthScore'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+  );
+  if (response.statusCode == 200) {
+    print("Score fetched successfully");
+    print(jsonDecode(response.body));
+    return jsonDecode(response.body).toDouble();
+  } else {
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to fetch score');
     }
   }
 }

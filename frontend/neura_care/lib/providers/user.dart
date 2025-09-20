@@ -21,6 +21,10 @@ class UserProvider extends StateNotifier<User> {
     state = User.empty();
     
   }
+  void updateHealthScore(double score) async {
+    state.healthScore = score;
+    await saveUser(state);
+  }
   
 }
 

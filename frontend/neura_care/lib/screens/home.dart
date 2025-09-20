@@ -23,7 +23,13 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
       body: Center(
-        child: Text("Welcome to NeuraCare! ${user.name}\n${user.email}"),
+        child: Column(
+          children: [
+            Text("Welcome, ${user.name}!", style: TextStyle(fontSize: 24)),
+            SizedBox(height: 20),
+            Text("Your health score is: ${user.healthScore.toStringAsFixed(2)}", style: TextStyle(fontSize: 20)),
+          ],
+        ),
       ),
     );
   }

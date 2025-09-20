@@ -25,13 +25,14 @@ class VitalsAdapter extends TypeAdapter<Vitals> {
       activityLevel: fields[5] as String,
       gender: fields[6] as String,
       age: fields[7] as int,
+      height: fields[8] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, Vitals obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.bloodPressure)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class VitalsAdapter extends TypeAdapter<Vitals> {
       ..writeByte(6)
       ..write(obj.gender)
       ..writeByte(7)
-      ..write(obj.age);
+      ..write(obj.age)
+      ..writeByte(8)
+      ..write(obj.height);
   }
 
   @override

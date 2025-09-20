@@ -12,9 +12,11 @@ final List<Question> onboardingQuestions = [
   Question(text: "What is your sugarLevel", type: QuestionType.double),
   Question(text: "What is your weight", type: QuestionType.double),
   Question(text: "What is your cholesterol", type: QuestionType.double),
+
   Question(
     text: 'What is your activity level?',
     type: QuestionType.choice,
     options: ["Sedentary", "Lightly Active", "Active", "Very Active"],
   ),
+  Question(text: "What is your height", type: QuestionType.double),
 ];

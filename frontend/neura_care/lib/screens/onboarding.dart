@@ -46,14 +46,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       activityLevel: answers[7],
       gender: answers[1],
       age: int.parse(answers[0]),
+      height: double.parse(answers[8]),
     );
     print(vitals);
     try{
         await createUserVitals(ref.read(userProviderNotifier.notifier).state.token!, vitals);
+        double score = await getScore(ref.read(userProviderNotifier.notifier).state.token!);
         ref.read(vitalsProviderNotifier.notifier).setVitals(vitals);
+        ref.read(userProviderNotifier.notifier).updateHealthScore(score);
     }catch(e){
         if(mounted){
-          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error submitting vitals: $e')),
+          );
         }
     }
   }

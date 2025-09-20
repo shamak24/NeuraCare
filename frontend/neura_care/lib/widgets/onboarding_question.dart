@@ -122,7 +122,9 @@ class OnboardingQuestion extends StatelessWidget {
             if (isLastQuestion)
               ElevatedButton(
                 onPressed: () {
-                  onSubmit(getAnswer());
+                  if (_formKey.currentState!.validate()) {
+                    onSubmit(getAnswer());
+                  }
                 },
                 child: const Text('Submit'),
               ),
