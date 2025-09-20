@@ -3,15 +3,15 @@ import VitalModel from "../models/Vitals.js";
 
 const addVital = async (req, res)=>{
     try{
-        const { bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age,height, sleepHours } = req.body;
+        const { bpHigh,bpLow, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age,height, sleepHours,smoking, drinking } = req.body;
         const userId = req.user._id;
-        if(!bloodPressure || !heartRate || !sugarLevel || !weight || !cholesterol || !activityLevel || !gender || !age || !height || !sleepHours){
+        if(!bpHigh || !bpLow || !heartRate || !sugarLevel || !weight || !cholesterol || !activityLevel || !gender || !age || !height || !sleepHours){
             return res.status(400).json({ message: "All fields are required", success: false });
         }
         if(await VitalModel.findOne({ userId })){
             return res.status(409).json({ message: "Vital for this user already exists", success: false });
         }
-        const vital = new VitalModel({ userId, bloodPressure, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age,height, sleepHours });
+        const vital = new VitalModel({ userId, bpHigh, bpLow, heartRate, sugarLevel, weight, cholesterol, activityLevel, gender, age, height, sleepHours, smoking, drinking });
         await vital.save();
         res.status(201).json({ message: "Vital added successfully", success: true });
     }catch(err){

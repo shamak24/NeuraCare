@@ -1,6 +1,5 @@
 import UserModel from "../models/User.js";
 
-
 const getScore = async (req,res)=>{
     const userId = req.user._id;
     try{
