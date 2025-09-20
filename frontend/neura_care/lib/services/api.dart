@@ -176,8 +176,8 @@ Future<void> updateUserDiet(String token, Diet diet) async {
     body: jsonEncode(diet.toJson()),
   );
 
-  if (response.statusCode == 200) {
-    return ;
+  if (response.statusCode == 201) {
+    return;
   } else {
     print(response.statusCode);
     if (response.statusCode == 400) {
@@ -258,18 +258,19 @@ Future<void> updateHistory(String token, PreviousHistory history) async {
   }
 }
 
-Future<String> getGeminiResponse(String message, String type) async {
+Future<String> getGeminiResponse(String message, String type, String token) async {
   final response = await http.post(
     Uri.parse('$baseUrl/gemini'),
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
     body: jsonEncode({'message': message, 'type': type}),
   );
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
     print(data);
-    return data['response'];
+    return data["botReply"];
   } else {
+    print(response.statusCode);
     throw Exception('Failed to get response from Gemini');
   }
 }

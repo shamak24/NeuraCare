@@ -603,6 +603,7 @@ class _PreviousHistoryScreenState extends ConsumerState<PreviousHistoryScreen>
         );
       }
     } catch (e) {
+      print(e);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
