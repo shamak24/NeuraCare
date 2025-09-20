@@ -19,6 +19,8 @@ class Vitals {
   String gender;
   @HiveField(7)
   int age;
+  @HiveField(8)
+  double height;
   Vitals({
     required this.bloodPressure,
     required this.heartRate,
@@ -28,6 +30,7 @@ class Vitals {
     required this.activityLevel,
     required this.gender,
     required this.age,
+    required this.height,
   });
   factory Vitals.empty() {
     return Vitals(
@@ -39,10 +42,12 @@ class Vitals {
       activityLevel: '',
       gender: '',
       age: 0,
+      height: 0.0,
     );
   }
 
   factory Vitals.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Vitals(
       bloodPressure: json['bloodPressure'].toDouble(),
       heartRate: json['heartRate'],
@@ -52,6 +57,7 @@ class Vitals {
       activityLevel: json['activityLevel'],
       gender: json['gender'],
       age: json['age'],
+      height: json['height'].toDouble(),
     );
   }
 
@@ -66,7 +72,8 @@ class Vitals {
         cholesterol == other.cholesterol &&
         activityLevel == other.activityLevel &&
         age == other.age &&
-        gender == other.gender;
+        gender == other.gender &&
+        height == other.height;
   }
 
   @override
@@ -78,11 +85,12 @@ class Vitals {
         cholesterol.hashCode ^
         activityLevel.hashCode ^
         gender.hashCode ^
-        age.hashCode;
+        age.hashCode ^
+        height.hashCode;
   }
 
   @override
   String toString() {
-    return 'Vitals(bloodPressure: $bloodPressure, heartRate: $heartRate, sugarLevel: $sugarLevel, weight: $weight, cholesterol: $cholesterol, activityLevel: $activityLevel, gender: $gender, age: $age)';
+    return 'Vitals(bloodPressure: $bloodPressure, heartRate: $heartRate, sugarLevel: $sugarLevel, weight: $weight, cholesterol: $cholesterol, activityLevel: $activityLevel, gender: $gender, age: $age, height: $height)';
   }
 }
