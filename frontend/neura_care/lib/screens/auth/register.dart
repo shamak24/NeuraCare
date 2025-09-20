@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Register")),
+      appBar: AppBar(title: const Text("Register"),backgroundColor:  Theme.of(context).colorScheme.inversePrimary),
       body: Center(
         child: Card(
           margin: const EdgeInsets.all(16),

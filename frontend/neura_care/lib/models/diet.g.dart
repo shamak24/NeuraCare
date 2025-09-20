@@ -57,3 +57,67 @@ class DietAdapter extends TypeAdapter<Diet> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class CuisineTypeAdapter extends TypeAdapter<CuisineType> {
+  @override
+  final int typeId = 5;
+
+  @override
+  CuisineType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return CuisineType.North;
+      case 1:
+        return CuisineType.South;
+      case 2:
+        return CuisineType.Indian;
+      case 3:
+        return CuisineType.Mexican;
+      case 4:
+        return CuisineType.Italian;
+      case 5:
+        return CuisineType.West;
+      case 6:
+        return CuisineType.Continental;
+      default:
+        return CuisineType.North;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, CuisineType obj) {
+    switch (obj) {
+      case CuisineType.North:
+        writer.writeByte(0);
+        break;
+      case CuisineType.South:
+        writer.writeByte(1);
+        break;
+      case CuisineType.Indian:
+        writer.writeByte(2);
+        break;
+      case CuisineType.Mexican:
+        writer.writeByte(3);
+        break;
+      case CuisineType.Italian:
+        writer.writeByte(4);
+        break;
+      case CuisineType.West:
+        writer.writeByte(5);
+        break;
+      case CuisineType.Continental:
+        writer.writeByte(6);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CuisineTypeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:neura_care/providers/diet.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/register.dart';
@@ -54,6 +55,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       } catch (e) {
         print('Error fetching vitals: $e');
       }
+      try{
+        final diet = await getUserDiet(user.token!);
+        ref.read(dietProvider.notifier).setDiet(diet);
+      }catch(e){
+        print('Error fetching diet: $e');
+      }
       ref.read(userProviderNotifier.notifier).setUser(user);
     } catch (e) {
       final msg = e.toString().replaceFirst('Exception: ', '');
@@ -68,7 +75,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(title: const Text("Login"), backgroundColor:  Theme.of(context).colorScheme.inversePrimary,),
+      
       body: Center(
         child: Card(
           margin: const EdgeInsets.all(16),

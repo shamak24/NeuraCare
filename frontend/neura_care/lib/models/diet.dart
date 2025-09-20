@@ -3,8 +3,22 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:collection/collection.dart';
 
 part "diet.g.dart";
+@HiveType(typeId:5 )
 enum CuisineType{
-  North, South, Indian, Mexican, Italian, West, Continental
+  @HiveField(0)
+  North,
+  @HiveField(1) 
+  South,
+  @HiveField(2) 
+  Indian, 
+  @HiveField(3)
+  Mexican, 
+  @HiveField(4)
+  Italian, 
+  @HiveField(5)
+  West, 
+  @HiveField(6)
+  Continental
 }
 
 @HiveType(typeId: 2)
