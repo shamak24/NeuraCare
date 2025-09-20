@@ -1,7 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:neura_care/models/dailyMeals.dart';
+import 'package:neura_care/models/daily_meals.dart';
 import 'package:neura_care/models/diet.dart';
 import 'package:neura_care/models/meal.dart';
+import 'package:neura_care/models/med.dart';
+import 'package:neura_care/models/med_list.dart';
 import 'package:neura_care/models/prev_history.dart';
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
@@ -15,9 +17,12 @@ Future<void> setupHive() async {
   Hive.registerAdapter(DailyMealsAdapter());
   Hive.registerAdapter(CuisineTypeAdapter());
   Hive.registerAdapter(MealAdapter());
+  Hive.registerAdapter(MedAdapter());
+  Hive.registerAdapter(MedListAdapter());
   await Hive.openBox<User>('userBox');
   await Hive.openBox<Diet>('dietBox');
   await Hive.openBox<PreviousHistory>('prevHistoryBox');
   await Hive.openBox<Vitals>('vitalsBox');
   await Hive.openBox<DailyMeals>('dailyMealsBox');
+  await Hive.openBox<MedList>('medListBox');
 }

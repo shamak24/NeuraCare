@@ -1,4 +1,4 @@
-import 'package:neura_care/models/dailyMeals.dart';
+import 'package:neura_care/models/daily_meals.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import 'package:neura_care/models/meal.dart';
 import 'package:neura_care/services/hive_storage.dart';

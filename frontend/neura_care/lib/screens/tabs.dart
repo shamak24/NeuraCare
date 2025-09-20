@@ -4,7 +4,7 @@ import 'package:neura_care/providers/theme.dart';
 import 'package:neura_care/screens/settings.dart';
 import 'package:neura_care/widgets/tabStates/home.dart';
 import 'package:neura_care/widgets/tabStates/meals.dart';
-import 'package:neura_care/widgets/tabStates/meds.dart';
+import 'package:neura_care/widgets/tabStates/health.dart';
 
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});

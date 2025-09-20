@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neura_care/models/dailyMeals.dart';
+import 'package:neura_care/models/daily_meals.dart';
 import 'package:neura_care/models/diet.dart';
 import 'package:neura_care/providers/daily_meals.dart';
 import 'package:neura_care/providers/diet.dart';

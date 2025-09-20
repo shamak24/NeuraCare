@@ -1,41 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dailyMeals.dart';
+part of 'med.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DailyMealsAdapter extends TypeAdapter<DailyMeals> {
+class MedAdapter extends TypeAdapter<Med> {
   @override
-  final int typeId = 4;
+  final int typeId = 7;
 
   @override
-  DailyMeals read(BinaryReader reader) {
+  Med read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DailyMeals(
-      breakfast: fields[0] as Meal,
-      lunch: fields[1] as Meal,
-      dinner: fields[2] as Meal,
-      date: fields[3] as DateTime,
+    return Med(
+      fields[0] as String,
+      fields[1] as int,
+      fields[2] as int,
+      fields[3] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, DailyMeals obj) {
+  void write(BinaryWriter writer, Med obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.breakfast)
+      ..write(obj.medName)
       ..writeByte(1)
-      ..write(obj.lunch)
+      ..write(obj.timingHrs)
       ..writeByte(2)
-      ..write(obj.dinner)
+      ..write(obj.timingMins)
       ..writeByte(3)
-      ..write(obj.date);
+      ..write(obj.number);
   }
 
   @override
@@ -44,7 +44,7 @@ class DailyMealsAdapter extends TypeAdapter<DailyMeals> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DailyMealsAdapter &&
+      other is MedAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
