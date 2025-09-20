@@ -44,6 +44,10 @@ const vitalSchema = new mongoose.Schema({
     height:{
         type: Number,
         required: true,
+    },
+    sleepHours:{
+        type: Number,
+        required: false
     }
 },
 { timestamps: true } // Adds createdAt and updatedAt fields
