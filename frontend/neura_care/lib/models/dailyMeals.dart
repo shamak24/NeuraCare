@@ -25,8 +25,16 @@ class DailyMeals {
       breakfast: Meal.empty(),
       lunch: Meal.empty(),
       dinner: Meal.empty(),
-      date: DateTime.now(),
+      // Use a fixed epoch date for the empty sentinel so equality is stable
+      date: DateTime.fromMillisecondsSinceEpoch(0),
     );
+  }
+
+  /// Returns true when all meals are empty (used as a stable "empty" check)
+  bool get isEmpty {
+    return breakfast == Meal.empty() &&
+        lunch == Meal.empty() &&
+        dinner == Meal.empty();
   }
   Map<String, dynamic> toJson() {
     return {
@@ -43,5 +51,26 @@ class DailyMeals {
       dinner: Meal.fromJson(json['dinner'] ?? {}),
       date: DateTime.parse(json['date'] ?? DateTime.now().toIso8601String()),
     );
+  }
+  @override
+  String toString() {
+    return 'DailyMeals(breakfast: $breakfast, lunch: $lunch, dinner: $dinner, date: $date)';
+  }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is DailyMeals &&
+        other.breakfast == breakfast &&
+        other.lunch == lunch &&
+        other.dinner == dinner &&
+        other.date == date;
+  }
+  @override
+  int get hashCode {
+    return breakfast.hashCode ^
+        lunch.hashCode ^
+        dinner.hashCode ^
+        date.hashCode;
   }
 }

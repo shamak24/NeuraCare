@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:neura_care/models/prev_history.dart';
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/models/diet.dart';
@@ -196,7 +197,6 @@ Future<DailyMeals> getDailyMealsData(String token) async {
   );
   if (response.statusCode == 200) {
     print("Daily meals fetched successfully");
-    print(jsonDecode(response.body));
     return DailyMeals.fromJson(jsonDecode(response.body)["meals"]);
   } else {
     if (response.statusCode == 401) {
@@ -207,5 +207,69 @@ Future<DailyMeals> getDailyMealsData(String token) async {
       print(response.statusCode);
       throw Exception('Failed to fetch daily meals');
     }
+  }
+}
+
+Future<PreviousHistory> getPreviousHistory(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/history'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+  );
+  print(jsonDecode(response.body));
+  if (response.statusCode == 200) {
+    try {
+      return PreviousHistory.fromJson(
+       jsonDecode(response.body)["history"], 
+      );
+    } catch (e) {
+      print(e);
+      return PreviousHistory.empty();
+    }
+  } else {
+    if (response.statusCode == 404) {
+      throw Exception('No previous history found for user');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else {
+      throw Exception('Failed to fetch previous history');
+    }
+  }
+}
+
+Future<void> updateHistory(String token, PreviousHistory history) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/history'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+    body: jsonEncode({history.toJson()}),
+  );
+  print(jsonDecode(response.body));
+  if (response.statusCode == 200) {
+    
+    return ;
+  } else {
+    print(response.statusCode);
+    if (response.statusCode == 400) {
+      throw Exception('Invalid history data');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else {
+      throw Exception('Failed to update history');
+    }
+  }
+}
+
+Future<String> getGeminiResponse(String message, String type) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/gemini'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'message': message, 'type': type}),
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    print(data);
+    return data['response'];
+  } else {
+    throw Exception('Failed to get response from Gemini');
   }
 }

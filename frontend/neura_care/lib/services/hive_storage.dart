@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:neura_care/models/dailyMeals.dart';
 import 'package:neura_care/models/diet.dart';
+import 'package:neura_care/models/prev_history.dart';
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
 
@@ -8,6 +9,9 @@ final Box<User> userBox = Hive.box<User>('userBox');
 final Box<Vitals> vitalsBox = Hive.box<Vitals>('vitalsBox');
 final Box<DailyMeals> dailyMealsBox = Hive.box<DailyMeals>('dailyMealsBox');
 final Box<Diet> dietBox = Hive.box<Diet>('dietBox');
+final Box<PreviousHistory> historyBox = Hive.box<PreviousHistory>('prevHistoryBox');
+
+
 User? getUser() {
   return userBox.get('user');
 }
@@ -49,4 +53,25 @@ Future<void> saveDiet(Diet diet) async {
 }
 Future<void> clearDietData() async {
   await dietBox.delete('diet');
+}
+
+PreviousHistory? getPrevHistory() {
+  return historyBox.get('history');
+}
+
+Future<void> savePrevHistoryData(PreviousHistory history) async {
+  await historyBox.put('history', history);
+}
+
+Future<void> clearPrevHistoryData() async {
+  await historyBox.delete('history');
+}
+
+Future<void> deleteAllData() async {
+  await userBox.clear();
+  await vitalsBox.clear();
+  await dailyMealsBox.clear();
+  await dietBox.clear();
+  await historyBox.clear();
+  
 }

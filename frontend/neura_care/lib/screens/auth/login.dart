@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:neura_care/providers/daily_meals.dart';
 import 'package:neura_care/providers/diet.dart';
+import 'package:neura_care/providers/prev_history.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/register.dart';
@@ -90,6 +92,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with TickerProviderSt
       await Future.wait([
         _loadVitals(user.token!),
         _loadDiet(user.token!),
+        _loadDailyMeals(user.token!),
+        _loadPreviousHistory(user.token!),
       ]);
       
       ref.read(userProviderNotifier.notifier).setUser(user);
@@ -134,6 +138,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with TickerProviderSt
       ref.read(dietProvider.notifier).setDiet(diet);
     } catch (e) {
       print('Error fetching diet: $e');
+    }
+  }
+
+  Future<void> _loadDailyMeals(String token) async {
+    try {
+      final meals = await getDailyMealsData(token);
+      ref.read(dailyMealsProviderNotifier.notifier).setDailyMeals(meals);
+    } catch (e) {
+      print('Error fetching daily meals: $e');
+    }
+  }
+
+  Future<void> _loadPreviousHistory(String token) async {
+    try {
+      final history = await getPreviousHistory(token);
+      ref.read(prevHistoryProviderNotifier.notifier).savePrevHistory(history);
+    } catch (e) {
+      print('Error fetching previous history: $e');
     }
   }
 
