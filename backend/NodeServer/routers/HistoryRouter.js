@@ -1,6 +1,6 @@
 import express from 'express';
 import { ensureAuthenticated } from '../middleware/Auth.js';
-import { addHistory, getHistory } from '../Controllers/HistoryController.js';
+import { addHistory, getHistory } from '../controllers/HistoryController.js';
 const router = express.Router();
 
 router.post('/', ensureAuthenticated, addHistory);

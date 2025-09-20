@@ -1,6 +1,6 @@
 import express from 'express';
 import { ensureAuthenticated } from '../middleware/Auth.js';
-import { addDiet, getDiet } from '../Controllers/DietController.js';
+import { addDiet, getDiet } from '../controllers/DietController.js';
 const router = express.Router();
 
 router.post('/', ensureAuthenticated, addDiet);
