@@ -1,6 +1,6 @@
 import express from 'express';
 import { ensureAuthenticated } from '../middleware/Auth.js';
-import {setMeals} from '../mealBackend.js';
+import {setMeals} from '../controllers/MealController.js';
 const router = express.Router();
 
 

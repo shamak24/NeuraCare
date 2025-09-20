@@ -1,5 +1,5 @@
-import Meal from './models/mealModel.js';
-import Diet from './models/diet.js';
+import Meal from '../models/mealModel.js';
+import Diet from '../models/diet.js';
 
 const setMeals = async (req, res) => {
     const userId = req.user._id;
