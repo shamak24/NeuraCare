@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
+import 'package:neura_care/providers/diet.dart';
+import 'package:neura_care/providers/theme.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/login.dart';
@@ -12,6 +14,7 @@ import 'package:neura_care/screens/tabs.dart';
 import 'package:neura_care/screens/onboarding.dart';
 import 'package:neura_care/services/api.dart';
 import 'package:neura_care/services/hive_setup.dart';
+import 'package:neura_care/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,11 +62,18 @@ class _MyAppState extends ConsumerState<MyApp> {
       } catch (e) {
         print('Error loading vitals: $e');
       }
+      try{
+        ref.read(dietProvider.notifier).loadDiet();
+      } catch (e) {
+        print('Error loading diet: $e');
+      }
     }
 
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: 'NeuraCare',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ref.watch(themeProvider),
       home: FutureBuilder(
         future: _initialize(),
         builder: (context, snapshot) {
