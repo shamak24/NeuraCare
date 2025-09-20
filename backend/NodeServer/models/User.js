@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    health_score:{
+    healthScore:{
         type: Number,
         default: 0
     }
