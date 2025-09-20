@@ -4,7 +4,8 @@ import UserModel from "../models/User.js";
 const getScore = async (req,res)=>{
     const userId = req.user._id;
     try{
-        const user = await UserModel.findOne({ userId });
+        // Changed findOne query to find by _id instead of userId
+        const user = await UserModel.findById(userId);
         if(!user){
             return res.status(404).json({ message: "User not found." });
         }

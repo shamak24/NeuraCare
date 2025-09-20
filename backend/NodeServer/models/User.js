@@ -24,5 +24,7 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-const UserModel = mongoose.model("User", userSchema);
+// Check if model exists before compiling
+const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
+
 export default UserModel;

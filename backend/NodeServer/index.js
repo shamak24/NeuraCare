@@ -26,7 +26,7 @@ app.use('/vitals', VitalRouter);
 app.use('/meds', MedRouter);
 app.use('/diet', DietRouter);
 app.use('/history', HistoryRouter);
-app.use('/healthscore', HealthScoreRouter);
+app.use('/healthScore', HealthScoreRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello from NeuraCare backend!');
