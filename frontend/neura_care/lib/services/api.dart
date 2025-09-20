@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/models/diet.dart';
+import 'package:neura_care/models/dailyMeals.dart';
 final String baseUrl = dotenv.env['backendUrl']!;
 
 Future<User> register(String email, String name, String password) async {
@@ -184,6 +185,27 @@ Future<void> updateUserDiet(String token, Diet diet) async {
       throw Exception('Unauthorized access');
     } else {
       throw Exception('Failed to update diet plan');
+    }
+  }
+}
+
+Future<DailyMeals> getDailyMealsData(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/meals'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+  );
+  if (response.statusCode == 200) {
+    print("Daily meals fetched successfully");
+    print(jsonDecode(response.body));
+    return DailyMeals.fromJson(jsonDecode(response.body)["meals"]);
+  } else {
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else if (response.statusCode == 404) {
+      throw Exception('No meals found for user');
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to fetch daily meals');
     }
   }
 }

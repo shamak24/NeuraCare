@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import 'package:neura_care/providers/daily_meals.dart';
-import 'package:neura_care/providers/user.dart';
-import 'package:neura_care/providers/vitals.dart';
+import 'package:neura_care/providers/theme.dart';
 import 'package:neura_care/screens/settings.dart';
 import 'package:neura_care/widgets/tabStates/home.dart';
 import 'package:neura_care/widgets/tabStates/meals.dart';
@@ -33,22 +31,37 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = ref.watch(themeProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("NeuraCare"),
-        backgroundColor:  Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
-          IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
-          }, icon: const Icon(Icons.settings)),
-          const SizedBox(width: 8),
+          // Theme Toggle Button
           IconButton(
             onPressed: () {
-              ref.read(vitalsProviderNotifier.notifier).clearVitals();
-              ref.read(userProviderNotifier.notifier).clearUser();
-              ref.read(dailyMealsProviderNotifier.notifier).clearDailyMeals();
+              ref.read(themeProvider.notifier).toggleTheme();
             },
-            icon: const Icon(Icons.logout),
+            icon: Icon(currentTheme.icon),
+            tooltip:
+                'Switch to ${currentTheme == ThemeMode.light
+                    ? "Dark"
+                    : currentTheme == ThemeMode.dark
+                    ? "Light"
+                    : "System"} theme',
+          ),
+
+          // Settings Button
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
           ),
         ],
       ),
@@ -59,11 +72,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
             _pageIndex = index;
           });
         },
-        children: const [
-          HomeTab(),
-          MealsTab(),
-          MedsTab(),
-        ],
+        children: const [HomeTab(), MealsTab(), MedsTab()],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _pageIndex,

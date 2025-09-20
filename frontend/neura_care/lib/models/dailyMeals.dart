@@ -36,4 +36,12 @@ class DailyMeals {
       'date': date.toIso8601String(),
     };
   }
+  factory DailyMeals.fromJson(Map<String, dynamic> json) {
+    return DailyMeals(
+      breakfast: Meal.fromJson(json['breakfast'] ?? {}),
+      lunch: Meal.fromJson(json['lunch'] ?? {}),
+      dinner: Meal.fromJson(json['dinner'] ?? {}),
+      date: DateTime.parse(json['date'] ?? DateTime.now().toIso8601String()),
+    );
+  }
 }
