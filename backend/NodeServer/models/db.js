@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {seedMeals} from '../seedMeals.js';
 
 const CONNECTION_OPTIONS = {
   maxPoolSize: 10,
@@ -13,6 +14,7 @@ const RETRY_INTERVAL = 5000; // 5 seconds
 async function ConnectDBWithRetry(retryCount = 0) {
   try {
     await mongoose.connect(process.env.DB_URL, CONNECTION_OPTIONS);
+    await seedMeals();
     console.log("✅ Database connected successfully");
 
     // Add connection event listeners

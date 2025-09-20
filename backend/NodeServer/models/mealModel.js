@@ -14,23 +14,23 @@ const mealSchema = new mongoose.Schema({
     required: true
   },
   vegan: { 
-    type: boolean, 
+    type: Boolean, 
     required: true 
   },
   vegetarian: { 
-    type: boolean, 
+    type: Boolean, 
     required: true 
   },
   glutenFree: { 
-    type: boolean, 
+    type: Boolean, 
     required: true 
   },
   lactoseFree:{
-    type: boolean,
+    type: Boolean,
     required: true
   },
   keto:{
-    type: boolean,
+    type: Boolean,
     required: true
   },
   ingredients:{
@@ -42,7 +42,7 @@ const mealSchema = new mongoose.Schema({
     required: true
   },
   description:{
-    type: [String],
+    type: String,
     required: true
   }
 });

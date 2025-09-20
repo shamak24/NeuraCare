@@ -1,13 +1,17 @@
 import DietModel from "../models/diet.js";
 
 const addDiet = async (req, res)=>{
-    const { vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies } = req.body || "false";
+    const { vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies } = req.body;
     const userId = req.user._id;
+    const newDiet = {userId, vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies};
     if(!vegan && !vegetarian && !glutenFree && !lactoseFree && !keto && !cuisinePreferences && !allergies){
         return res.status(400).json({ message: "dietary preferences must be specified." });
     }
-    if(await DietModel.findOne({userId})){
-        return res.status(409).json({ message: "Dietary preferences already exist for this user." });
+    const prevDiet = await DietModel.findOne({ userId });
+    if (prevDiet) {
+        // If dietary preferences already exist, update them
+        await DietModel.updateOne({ userId }, { $set: newDiet });
+        return res.status(200).json({ message: "Dietary preferences updated successfully.", diet: newDiet });
     }
     try{
         const diet = new DietModel({ userId, vegan, vegetarian, glutenFree, lactoseFree, keto, cuisinePreferences, allergies });

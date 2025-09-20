@@ -12,7 +12,8 @@ import MedRouter from './routers/MedRouter.js';
 import DietRouter from './routers/DietRouter.js';
 import HistoryRouter from './routers/HistoryRouter.js';
 import HealthScoreRouter from './routers/HealthScore.js';
-import GeminiRouter from './routers/GeminiRouter.js'
+import GeminiRouter from './routers/GeminiRouter.js';
+import MealRouter from './routers/MealRouter.js';
 
 const app = express();
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/diet', DietRouter);
 app.use('/history', HistoryRouter);
 app.use('/healthScore', HealthScoreRouter);
 app.use('/gemini', GeminiRouter);
+app.use('/meals', MealRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello from NeuraCare backend!');
