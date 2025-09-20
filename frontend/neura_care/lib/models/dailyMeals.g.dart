@@ -1,50 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'meals.dart';
+part of 'dailyMeals.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MealsAdapter extends TypeAdapter<Meals> {
+class DailyMealsAdapter extends TypeAdapter<DailyMeals> {
   @override
   final int typeId = 4;
 
   @override
-  Meals read(BinaryReader reader) {
+  DailyMeals read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Meals(
-      name: fields[0] as String,
-      description: fields[1] as String,
-      ingredients: (fields[2] as List).cast<String>(),
-      instructions: fields[3] as String,
-      prepTime: fields[4] as int,
-      cookTime: fields[5] as int,
-      servings: fields[6] as int,
+    return DailyMeals(
+      breakfast: fields[0] as Meal,
+      lunch: fields[1] as Meal,
+      dinner: fields[2] as Meal,
+      date: fields[3] as DateTime,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Meals obj) {
+  void write(BinaryWriter writer, DailyMeals obj) {
     writer
-      ..writeByte(7)
-      ..writeByte(0)
-      ..write(obj.name)
-      ..writeByte(1)
-      ..write(obj.description)
-      ..writeByte(2)
-      ..write(obj.ingredients)
-      ..writeByte(3)
-      ..write(obj.instructions)
       ..writeByte(4)
-      ..write(obj.prepTime)
-      ..writeByte(5)
-      ..write(obj.cookTime)
-      ..writeByte(6)
-      ..write(obj.servings);
+      ..writeByte(0)
+      ..write(obj.breakfast)
+      ..writeByte(1)
+      ..write(obj.lunch)
+      ..writeByte(2)
+      ..write(obj.dinner)
+      ..writeByte(3)
+      ..write(obj.date);
   }
 
   @override
@@ -53,7 +44,7 @@ class MealsAdapter extends TypeAdapter<Meals> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MealsAdapter &&
+      other is DailyMealsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

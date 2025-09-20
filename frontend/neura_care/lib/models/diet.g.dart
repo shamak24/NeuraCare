@@ -22,7 +22,7 @@ class DietAdapter extends TypeAdapter<Diet> {
       glutenFree: fields[2] as bool,
       lactoseFree: fields[3] as bool,
       keto: fields[4] as bool,
-      cuisinePreference: (fields[5] as List).cast<CuisineType>(),
+      cuisinePreferences: (fields[5] as List).cast<CuisineType>(),
       allergies: (fields[6] as List).cast<String>(),
     );
   }
@@ -42,7 +42,7 @@ class DietAdapter extends TypeAdapter<Diet> {
       ..writeByte(4)
       ..write(obj.keto)
       ..writeByte(5)
-      ..write(obj.cuisinePreference)
+      ..write(obj.cuisinePreferences)
       ..writeByte(6)
       ..write(obj.allergies);
   }

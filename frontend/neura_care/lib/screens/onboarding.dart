@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/data/onboarding_questions.dart';
 import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/providers/user.dart';
@@ -37,6 +38,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     setState(() {
       answers[currentQuestionIndex] = answer;
     });
+    if(!await InternetConnection().hasInternetAccess){
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No internet connection')),
+        );
+      }
+      return;
+    }
     final vitals = Vitals(
       age: int.parse(answers[0]),
       gender: answers[1],
