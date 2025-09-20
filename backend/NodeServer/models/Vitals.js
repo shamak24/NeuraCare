@@ -40,6 +40,10 @@ const vitalSchema = new mongoose.Schema({
     age:{
         type: Number,
         required: true,
+    },
+    height:{
+        type: Number,
+        required: true,
     }
 },
 { timestamps: true } // Adds createdAt and updatedAt fields
