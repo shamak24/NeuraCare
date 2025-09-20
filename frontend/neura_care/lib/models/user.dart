@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:collection/collection.dart';
 part "user.g.dart";
 @HiveType(typeId: 0)
 class User {
@@ -7,7 +8,8 @@ class User {
     required this.name,
     this.healthScore = 0.0,
     this.token,
-    this.healthPoints = 0.0,
+    required this.preventiveMeasures,
+    required this.comorbidityAdvice,
   });
   @HiveField(0)
   final String email;
@@ -18,32 +20,45 @@ class User {
   @HiveField(3)
   double healthScore;
   @HiveField(4)
-  double healthPoints;
+  List<String> preventiveMeasures;
+  @HiveField(5)
+  String comorbidityAdvice;
 
 
   factory User.empty() {
-    return User(email: '', name: '', healthScore: 0.0);
+    return User(email: '', name: '', healthScore: 0.0, token: null, preventiveMeasures: [], comorbidityAdvice: '');
   }
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(email: json['email'], name: json['name'], token: json['token'], healthScore: json['healthScore']?.toDouble() ?? 0.0, healthPoints: json['healthPoints']?.toDouble() ?? 0.0);
+    return User(email: json['email'], name: json['name'], token: json['token'], healthScore: json['healthScore']?.toDouble() ?? 0.0, preventiveMeasures: List<String>.from(json['preventiveMeasures'] ?? []), comorbidityAdvice: json['comorbidityAdvice'] ?? '');
   }
   Map<String, dynamic> toJson() {
-    return {'email': email, 'name': name, 'token': token, 'healthScore': healthScore, 'healthPoints': healthPoints};
+    return {'email': email, 'name': name, 'token': token, 'healthScore': healthScore, 'preventiveMeasures': preventiveMeasures, 'comorbidityAdvice': comorbidityAdvice};
   }
 
   @override
   String toString() {
-    return 'User(email: $email, name: $name, token: $token, healthScore: $healthScore, healthPoints: $healthPoints)';
+    return 'User(email: $email, name: $name, token: $token, healthScore: $healthScore, preventiveMeasures: $preventiveMeasures, comorbidityAdvice: $comorbidityAdvice)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is User && other.email == email && other.name == name && other.healthPoints == healthPoints && other.healthScore == healthScore;
+    return other is User && 
+           other.email == email && 
+           other.name == name && 
+           other.token == token &&
+           const ListEquality().equals(other.preventiveMeasures, preventiveMeasures) && 
+           other.comorbidityAdvice == comorbidityAdvice && 
+           other.healthScore == healthScore;
   }
 
   @override
   int get hashCode {
-    return email.hashCode ^ name.hashCode ^ healthPoints.hashCode ^ healthScore.hashCode;
+    return email.hashCode ^ 
+           name.hashCode ^ 
+           token.hashCode ^
+           const ListEquality().hash(preventiveMeasures) ^ 
+           comorbidityAdvice.hashCode ^ 
+           healthScore.hashCode;
   }
 }

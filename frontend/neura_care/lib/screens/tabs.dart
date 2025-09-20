@@ -34,6 +34,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     final currentTheme = ref.watch(themeProvider);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text("NeuraCare"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

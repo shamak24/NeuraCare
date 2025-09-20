@@ -355,11 +355,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with TickerProv
               
               // Register Button
               SizedBox(
+                width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _register,
                   style: ElevatedButton.styleFrom(
-                    elevation: isLoading ? 0 : 2,
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                    disabledBackgroundColor: theme.colorScheme.primary.withOpacity(0.6),
+                    disabledForegroundColor: theme.colorScheme.onPrimary.withOpacity(0.6),
+                    elevation: isLoading ? 0 : 4,
+                    shadowColor: theme.colorScheme.primary.withOpacity(0.4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   child: isLoading
                       ? SizedBox(
@@ -375,6 +384,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with TickerProv
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: theme.colorScheme.onPrimary,
+                            fontSize: 16,
                           ),
                         ),
                 ),
@@ -402,6 +412,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> with TickerProv
               : () {
                   Navigator.pop(context);
                 },
+          style: TextButton.styleFrom(
+            foregroundColor: theme.colorScheme.primary,
+            overlayColor: theme.colorScheme.primary.withOpacity(0.1),
+          ),
           child: Text(
             'Sign In',
             style: theme.textTheme.bodyMedium?.copyWith(

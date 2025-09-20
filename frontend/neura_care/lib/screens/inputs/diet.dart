@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:neura_care/providers/daily_meals.dart';
 import 'package:neura_care/providers/diet.dart';
 import 'package:neura_care/models/diet.dart';
 import 'package:neura_care/providers/user.dart';
@@ -125,7 +126,8 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
       try {
         await updateUserDiet(ref.read(userProviderNotifier).token!, diet);
         ref.read(dietProvider.notifier).setDiet(diet);
-
+        final dailymeals = await getDailyMealsData(ref.read(userProviderNotifier).token!);
+        ref.read(dailyMealsProviderNotifier.notifier).setDailyMeals(dailymeals);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

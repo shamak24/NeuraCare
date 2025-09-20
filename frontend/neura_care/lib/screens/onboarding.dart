@@ -64,10 +64,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     print(vitals);
     try{
         await createUserVitals(ref.read(userProviderNotifier.notifier).state.token!, vitals);
-        double score = await getScore(ref.read(userProviderNotifier.notifier).state.token!);
+        final score = await getScore(ref.read(userProviderNotifier.notifier).state.token!);
+        
+       
         ref.read(vitalsProviderNotifier.notifier).setVitals(vitals);
-        ref.read(userProviderNotifier.notifier).updateHealthScore(score);
+        ref.read(userProviderNotifier.notifier).updateHealthInfo(score);
     }catch(e){
+      print('Error submitting vitals: $e');
         if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error submitting vitals: $e')),

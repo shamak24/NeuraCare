@@ -21,8 +21,10 @@ class UserProvider extends StateNotifier<User> {
     state = User.empty();
     
   }
-  void updateHealthScore(double score) async {
-    state.healthScore = score;
+  void updateHealthInfo(Map<String, dynamic> healthInfo) async {
+    state.healthScore = healthInfo['healthScore']?.toDouble() ?? 0.0;
+    state.preventiveMeasures = List<String>.from(healthInfo['preventiveMeasures'] ?? []);
+    state.comorbidityAdvice = healthInfo['comorbidityAdvice'] ?? '';
     await saveUser(state);
   }
   

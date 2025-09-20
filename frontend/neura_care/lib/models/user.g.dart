@@ -21,14 +21,15 @@ class UserAdapter extends TypeAdapter<User> {
       name: fields[2] as String,
       healthScore: fields[3] as double,
       token: fields[1] as String?,
-      healthPoints: fields[4] as double,
+      preventiveMeasures: (fields[4] as List).cast<String>(),
+      comorbidityAdvice: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.email)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(3)
       ..write(obj.healthScore)
       ..writeByte(4)
-      ..write(obj.healthPoints);
+      ..write(obj.preventiveMeasures)
+      ..writeByte(5)
+      ..write(obj.comorbidityAdvice);
   }
 
   @override

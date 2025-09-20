@@ -51,6 +51,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       ref.read(userProviderNotifier.notifier).loadUserData();
       User user = ref.read(userProviderNotifier);
       try {
+        print('User loaded: $user');
         if (user != User.empty()) {
           await verifyToken(user.token!);
         }

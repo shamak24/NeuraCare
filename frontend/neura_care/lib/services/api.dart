@@ -129,7 +129,7 @@ Future<void> createUserVitals(String token, Vitals vitals) async {
   }
 }
 
-Future<double> getScore(String token) async {
+Future<Map<String, dynamic>> getScore(String token) async {
   final response = await http.get(
     Uri.parse('$baseUrl/healthScore'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
@@ -137,7 +137,7 @@ Future<double> getScore(String token) async {
   if (response.statusCode == 200) {
     print("Score fetched successfully");
     print(jsonDecode(response.body));
-    return jsonDecode(response.body).toDouble();
+    return jsonDecode(response.body);
   } else {
     if (response.statusCode == 401) {
       throw Exception('Unauthorized access');
