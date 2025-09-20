@@ -31,6 +31,8 @@ const setMeals = async (req, res) => {
                 dinner: await Meal.find({...query, category: "Dinner" })
             };
         }
+        // Filter meals based on dietary restrictions
+
 
         // Get random meals for each now
         const breakfast = meals.breakfast[Math.floor(Math.random() * meals.breakfast.length)];
