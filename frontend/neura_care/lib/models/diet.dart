@@ -2,6 +2,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 part "diet.g.dart";
+enum CuisineType{
+  North, South, Indian, Mexican, Italian, West, Continental
+}
+
 @HiveType(typeId: 2)
 class Diet{
   @HiveField(0)
@@ -15,12 +19,8 @@ class Diet{
   @HiveField(4)
   bool keto;
   @HiveField(5)
-  bool paleo;
+  List<CuisineType> cuisinePreference;
   @HiveField(6)
-  bool lowFodmap;
-  @HiveField(7)
-  bool pescatarian;
-  @HiveField(8)
   List<String> allergies;
 
   Diet({
@@ -29,9 +29,7 @@ class Diet{
     required this.glutenFree,
     required this.lactoseFree,
     required this.keto,
-    required this.paleo,
-    required this.lowFodmap,
-    required this.pescatarian,
+    required this.cuisinePreference,
     required this.allergies,
   });
 }

@@ -38,15 +38,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       answers[currentQuestionIndex] = answer;
     });
     final vitals = Vitals(
-      bloodPressure: double.parse(answers[2]),
-      heartRate: int.parse(answers[3]),
-      sugarLevel: double.parse(answers[4]),
-      weight: double.parse(answers[5]),
-      cholesterol: double.parse(answers[6]),
-      activityLevel: answers[7],
-      gender: answers[1],
       age: int.parse(answers[0]),
-      height: double.parse(answers[8]),
+      gender: answers[1],
+      bpHigh: int.parse(answers[2]),
+      bpLow: int.parse(answers[3]),
+      heartRate: int.parse(answers[4]),
+      sugarLevel: int.parse(answers[5]),
+      weight: double.parse(answers[6]),
+      cholesterol: int.parse(answers[7]),
+      activityLevel: answers[8],
+      height: double.parse(answers[9]),
+      smoking: answers[10] == 'true' ? true : false,
+      drinking: answers[11] == 'true' ? true : false,
+      sleepHours: double.parse(answers[12]),
     );
     print(vitals);
     try{

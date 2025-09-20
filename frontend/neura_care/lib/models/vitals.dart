@@ -4,25 +4,34 @@ part "vitals.g.dart";
 @HiveType(typeId: 1)
 class Vitals {
   @HiveField(0)
-  double bloodPressure;
+  int bpHigh;
   @HiveField(1)
-  int heartRate;
+  int bpLow;
   @HiveField(2)
-  double sugarLevel;
+  int heartRate;
   @HiveField(3)
-  double weight;
+  int sugarLevel;
   @HiveField(4)
-  double cholesterol;
+  double weight;
   @HiveField(5)
-  String activityLevel;
+  int cholesterol;
   @HiveField(6)
-  String gender;
+  String activityLevel;
   @HiveField(7)
-  int age;
+  String gender;
   @HiveField(8)
+  int age;
+  @HiveField(9)
   double height;
+  @HiveField(10)
+  bool smoking;
+  @HiveField(11)
+  bool drinking;
+  @HiveField(12)
+  double sleepHours;
   Vitals({
-    required this.bloodPressure,
+    required this.bpHigh,
+    required this.bpLow,
     required this.heartRate,
     required this.sugarLevel,
     required this.weight,
@@ -31,41 +40,71 @@ class Vitals {
     required this.gender,
     required this.age,
     required this.height,
+    required this.smoking,
+    required this.drinking,
+    required this.sleepHours,
   });
   factory Vitals.empty() {
     return Vitals(
-      bloodPressure: 0.0,
+      bpHigh: 0,
+      bpLow: 0,
       heartRate: 0,
-      sugarLevel: 0.0,
-      weight: 0.0,
-      cholesterol: 0.0,
+      sugarLevel: 0,
+      weight: 0,
+      cholesterol: 0,
       activityLevel: '',
       gender: '',
       age: 0,
       height: 0.0,
+      smoking: false,
+      drinking: false,
+      sleepHours: 0.0,
     );
   }
 
   factory Vitals.fromJson(Map<String, dynamic> json) {
     print(json);
     return Vitals(
-      bloodPressure: json['bloodPressure'].toDouble(),
+      bpHigh: json["bpHigh"],
+      bpLow: json["bpLow"],
       heartRate: json['heartRate'],
-      sugarLevel: json['sugarLevel'].toDouble(),
-      weight: json['weight'].toDouble(),
-      cholesterol: json['cholesterol'].toDouble(),
+      sugarLevel: json['sugarLevel'],
+      weight: json['weight'],
+      cholesterol: json['cholesterol'],
       activityLevel: json['activityLevel'],
       gender: json['gender'],
       age: json['age'],
-      height: json['height'].toDouble(),
+      height: json['height'],
+      smoking: json['smoking'] ?? false,
+      drinking: json['drinking'] ?? false,
+      sleepHours: (json['sleepHours'] ?? 0).toDouble(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'bpHigh': bpHigh,
+      'bpLow': bpLow,
+      'heartRate': heartRate,
+      'sugarLevel': sugarLevel,
+      'weight': weight,
+      'cholesterol': cholesterol,
+      'activityLevel': activityLevel,
+      'gender': gender,
+      'age': age,
+      'height': height,
+      'smoking': smoking,
+      'drinking': drinking,
+      'sleepHours': sleepHours,
+    };
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is Vitals &&
-        bloodPressure == other.bloodPressure &&
+        bpHigh == other.bpHigh &&
+        bpLow == other.bpLow &&
         heartRate == other.heartRate &&
         sugarLevel == other.sugarLevel &&
         weight == other.weight &&
@@ -78,7 +117,8 @@ class Vitals {
 
   @override
   int get hashCode {
-    return bloodPressure.hashCode ^
+    return bpHigh.hashCode ^
+        bpLow.hashCode ^
         heartRate.hashCode ^
         sugarLevel.hashCode ^
         weight.hashCode ^
@@ -91,6 +131,6 @@ class Vitals {
 
   @override
   String toString() {
-    return 'Vitals(bloodPressure: $bloodPressure, heartRate: $heartRate, sugarLevel: $sugarLevel, weight: $weight, cholesterol: $cholesterol, activityLevel: $activityLevel, gender: $gender, age: $age, height: $height)';
+    return 'Vitals(bpHigh: $bpHigh, bpLow: $bpLow, heartRate: $heartRate, sugarLevel: $sugarLevel, weight: $weight, cholesterol: $cholesterol, activityLevel: $activityLevel, gender: $gender, age: $age, height: $height)';
   }
 }

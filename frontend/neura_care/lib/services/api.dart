@@ -89,16 +89,7 @@ Future<Vitals> updateUserVitals(String token, Vitals vitals) async {
   final response = await http.put(
     Uri.parse('$baseUrl/vitals'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
-    body: jsonEncode({
-      'bloodPressure': vitals.bloodPressure,
-      'heartRate': vitals.heartRate,
-      'sugarLevel': vitals.sugarLevel,
-      'weight': vitals.weight,
-      'cholesterol': vitals.cholesterol,
-      'activityLevel': vitals.activityLevel,
-      "gender": vitals.gender,
-      "age": vitals.age,
-    }),
+    body: jsonEncode(vitals.toJson()),
   );
 
   if (response.statusCode == 200) {
@@ -118,22 +109,11 @@ Future<void> createUserVitals(String token, Vitals vitals) async {
   final response = await http.post(
     Uri.parse('$baseUrl/vitals'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
-    body: jsonEncode({
-      'bloodPressure': vitals.bloodPressure,
-      'heartRate': vitals.heartRate,
-      'sugarLevel': vitals.sugarLevel,
-      'weight': vitals.weight,
-      'cholesterol': vitals.cholesterol,
-      'activityLevel': vitals.activityLevel,
-      'gender': vitals.gender,
-      'age': vitals.age,
-      'height': vitals.height,
-
-    }),
+    body: jsonEncode(vitals.toJson()),
   );
 
   if (response.statusCode == 201) {
-    return ;
+    return;
   } else {
     if (response.statusCode == 400) {
       throw Exception('Invalid vitals data');
