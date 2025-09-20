@@ -1,38 +1,47 @@
 import UserModel from "../models/User.js";
 
 const calculateHealthScore = (vitals, prevhistory, user)=>{
-    let score = 0;
+
+    //VITALS MAX - 25 POINTS
+    let vitalPoints = 0;
     //BLOOD PRESSURE
-    if(vitals.bpHigh<120 && vitals.bpLow<80) score +=10;
-    else if(vitals.bpHigh<=129 && vitals.bpLow<80) score +=7;
-    else if(vitals.bpHigh<=139 && vitals.bpLow<=89) score +=4;
+    if(vitals.bpHigh<120 && vitals.bpLow<80) vitalPoints +=10;
+    else if(vitals.bpHigh<=129 && vitals.bpLow<80) vitalPoints +=7;
+    else if(vitals.bpHigh<=139 && vitals.bpLow<=89) vitalPoints +=4;
 
     //HEART RATE
-    if(vitals.heartRate>=60 && vitals.heartRate<100) score +=10;
-    else if(vitals.heartRate<60 && vitals.heartRate>100) score +=5;
+    if(vitals.heartRate>=60 && vitals.heartRate<100) vitalPoints +=10;
+    else if(vitals.heartRate<60 && vitals.heartRate>100) vitalPoints +=5;
 
     //SUGAR LEVEL
-    if(vitals.sugarLevel<100) score +=10;
-    else if(vitals.sugarLevel>=100 && vitals.sugarLevel<=125) score +=5;
+    if(vitals.sugarLevel<100) vitalPoints +=10;
+    else if(vitals.sugarLevel>=100 && vitals.sugarLevel<=125) vitalPoints +=5;
 
     const BMI = (vitals.weight)/( (vitals.height/100) * (vitals.height/100));
-    if(BMI>=18.5 && BMI<=24.9) score +=10;
-    else if(BMI>=25 && BMI<=29.9) score +=5;
+    if(BMI>=18.5 && BMI<=24.9) vitalPoints +=10;
+    else if(BMI>=25 && BMI<=29.9) vitalPoints +=5;
 
     //CHOLESTEROL
-    if(vitals.cholesterol<200) score +=10;
-    else if(vitals.cholesterol>=200 && vitals.cholesterol<=239) score +=5;
+    if(vitals.cholesterol<200) vitalPoints +=10;
+    else if(vitals.cholesterol>=200 && vitals.cholesterol<=239) vitalPoints +=5;
 
     //ACTIVITY LEVEL
-    if(vitals.activityLevel.toLowerCase() === "very active") score +=10;
-    else if(vitals.activityLevel.toLowerCase() === "active") score +=7;
-    else if(vitals.activityLevel.toLowerCase() === "lightly active") score +=4;
+    if(vitals.activityLevel.toLowerCase() === "very active") vitalPoints +=10;
+    else if(vitals.activityLevel.toLowerCase() === "active") vitalPoints +=7;
+    else if(vitals.activityLevel.toLowerCase() === "lightly active") vitalPoints +=4;
+
+    const totalVitalPoints = (vitalPoints/25)*25;
 
     //LIFESSTYLE MAX - 15 POINTS
     //SMOKING AND DRINKING
-    if(vitals.sleepHours>=7 && vitals.sleepHours<=9) score +=10;
-    else if(vitals.sleepHours>=6 && vitals.sleepHours<7 || vitals.sleepHours>9 && sleepHours<=10) score +=5;
-    
+    let lifestylePoints = 0;
+    if(vitals.sleepHours>=7 && vitals.sleepHours<=9) lifestylePoints +=10;
+    else if(vitals.sleepHours>=6 && vitals.sleepHours<7 || vitals.sleepHours>9 && sleepHours<=10) lifestylePoints +=5;
+    if(vitals.drinking) lifestylePoints+=5;
+    else lifestylePoints +=10;
+    if(!vitals.smoking) lifestylePoints+=10;
+    const totalLifestylePoints = (lifestylePoints/15)*20;
+
 
     if(vitals.sleepHours<6) score -=10;
     if(vitals.smoking) score -=10;
