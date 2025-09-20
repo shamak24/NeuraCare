@@ -5,18 +5,25 @@ const addHistory = async (req, res) => {
   const surgeries = req.body.surgeries || [];
   const familyHistory = req.body.familyHistory || [];
   const userId = req.user._id;
-  if (await prevHistoryModel.findOne({ userId })) {
-    return res
-      .status(409)
-      .json({ message: "History already exists for this user" });
-  }
-  try {
-    const newHistory = new prevHistoryModel({
+  const newHistory = new prevHistoryModel({
       userId,
       diseases,
       surgeries,
       familyHistory,
-    });
+  });
+  const prevHistory = await prevHistoryModel.findOne({ userId });
+  if (prevHistory) {
+    try{
+      await prevHistoryModel.updateOne({ userId }, { $set: { newHistory } });
+      return res
+        .status(200)
+        .json({ message: "Previous history updated successfully", history: newHistory });
+    }catch(error){
+      console.error("Error updating previous history:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }else{
+    try {
     await newHistory.save();
     res
       .status(201)
@@ -27,6 +34,7 @@ const addHistory = async (req, res) => {
   } catch (error) {
     console.error("Error in addHistory:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
   }
 };
 
