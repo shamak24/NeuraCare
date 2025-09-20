@@ -17,19 +17,21 @@ class VitalsAdapter extends TypeAdapter<Vitals> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Vitals(
-      bloodPressure: fields[0] as int,
+      bloodPressure: fields[0] as double,
       heartRate: fields[1] as int,
-      sugarLevel: fields[2] as int,
-      weight: fields[3] as int,
-      cholesterol: fields[4] as int,
+      sugarLevel: fields[2] as double,
+      weight: fields[3] as double,
+      cholesterol: fields[4] as double,
       activityLevel: fields[5] as String,
+      gender: fields[6] as String,
+      age: fields[7] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Vitals obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.bloodPressure)
       ..writeByte(1)
@@ -41,7 +43,11 @@ class VitalsAdapter extends TypeAdapter<Vitals> {
       ..writeByte(4)
       ..write(obj.cholesterol)
       ..writeByte(5)
-      ..write(obj.activityLevel);
+      ..write(obj.activityLevel)
+      ..writeByte(6)
+      ..write(obj.gender)
+      ..writeByte(7)
+      ..write(obj.age);
   }
 
   @override

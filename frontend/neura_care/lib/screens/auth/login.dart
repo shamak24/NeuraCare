@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:neura_care/models/user.dart';
 import 'package:neura_care/providers/user.dart';
+import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/register.dart';
 import 'package:neura_care/services/api.dart';
 
@@ -25,7 +25,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  // simple email validation using a regex
   bool _isValidEmail(String email) {
     final pattern =
         r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$";
@@ -48,7 +47,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         throw Exception('No internet connection');
       }
 
-      final User user = await login(email, password);
+      final user = await login(email, password);
+      try {
+        final vitals = await getUserVitals(user.token!);
+        ref.read(vitalsProviderNotifier.notifier).setVitals(vitals);
+      } catch (e) {
+        print('Error fetching vitals: $e');
+      }
       ref.read(userProviderNotifier.notifier).setUser(user);
     } catch (e) {
       final msg = e.toString().replaceFirst('Exception: ', '');
@@ -92,7 +97,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         }
                         return null;
                       },
-                      
                     ),
                   ),
                   Padding(

@@ -5,7 +5,7 @@ const vitalSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
-        unique: true // one-to-one relation
+        unique: true 
     },
     bloodPressure: {
         type: Number,
@@ -17,7 +17,7 @@ const vitalSchema = new mongoose.Schema({
     },
     sugarLevel: {
         type: Number,
-        required: false
+        required: true
     },
     weight: {
         type: Number,
@@ -25,7 +25,7 @@ const vitalSchema = new mongoose.Schema({
     },
     cholesterol: {
         type: Number,
-        required: false
+        required: true
     },
     activityLevel: {
         type: String,

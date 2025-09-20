@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:neura_care/models/user.dart';
+import 'package:neura_care/models/vitals.dart';
 
 final String baseUrl = dotenv.env['backendUrl']!;
 
@@ -16,13 +17,13 @@ Future<User> register(String email, String name, String password) async {
   if (response.statusCode == 201) {
     return User.fromJson(jsonDecode(response.body));
   } else {
-      if (response.statusCode == 409) {
-        throw Exception('Email already in use');
-      } else if (response.statusCode == 400) {
-        throw Exception('Invalid input data');
-      } else {
-    throw Exception('Failed to register user');
-      }
+    if (response.statusCode == 409) {
+      throw Exception('Email already in use');
+    } else if (response.statusCode == 400) {
+      throw Exception('Invalid input data');
+    } else {
+      throw Exception('Failed to register user');
+    }
   }
 }
 
@@ -50,13 +51,96 @@ Future<void> verifyToken(String token) async {
   print('Verifying token: $token');
   final response = await http.post(
     Uri.parse('$baseUrl/auth/verify-token'),
-    headers: {
-      'Content-Type': 'application/json',
-      'Cookie': 'token=$token',
-    },
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
   );
   print(response.statusCode);
   if (response.statusCode != 200) {
     throw Exception('Failed to verify token');
+  }
+}
+
+Future<Vitals> getUserVitals(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/vitals'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+  );
+  print(jsonDecode(response.body));
+  if (response.statusCode == 200) {
+    try {
+      return Vitals.fromJson(
+       jsonDecode(response.body)["vitals"], 
+      );
+    } catch (e) {
+      print(e);
+      return Vitals.empty();
+    }
+  } else {
+    if (response.statusCode == 404) {
+      throw Exception('No vitals found for user');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else {
+      throw Exception('Failed to fetch vitals');
+    }
+  }
+}
+
+Future<Vitals> updateUserVitals(String token, Vitals vitals) async {
+  final response = await http.put(
+    Uri.parse('$baseUrl/vitals'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+    body: jsonEncode({
+      'bloodPressure': vitals.bloodPressure,
+      'heartRate': vitals.heartRate,
+      'sugarLevel': vitals.sugarLevel,
+      'weight': vitals.weight,
+      'cholesterol': vitals.cholesterol,
+      'activityLevel': vitals.activityLevel,
+      "gender": vitals.gender,
+      "age": vitals.age,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return Vitals.fromJson(jsonDecode(response.body));
+  } else {
+    if (response.statusCode == 400) {
+      throw Exception('Invalid vitals data');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else {
+      throw Exception('Failed to update vitals');
+    }
+  }
+}
+
+Future<void> createUserVitals(String token, Vitals vitals) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/vitals'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+    body: jsonEncode({
+      'bloodPressure': vitals.bloodPressure,
+      'heartRate': vitals.heartRate,
+      'sugarLevel': vitals.sugarLevel,
+      'weight': vitals.weight,
+      'cholesterol': vitals.cholesterol,
+      'activityLevel': vitals.activityLevel,
+      'gender': vitals.gender,
+      'age': vitals.age,
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    return ;
+  } else {
+    if (response.statusCode == 400) {
+      throw Exception('Invalid vitals data');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else if (response.statusCode == 409) {
+      throw Exception('Vitals already exist for user');
+    } else {
+      throw Exception('Failed to create vitals');
+    }
   }
 }

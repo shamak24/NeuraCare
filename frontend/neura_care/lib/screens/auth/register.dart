@@ -34,33 +34,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
-  void _register() async{
+  void _register() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
     setState(() {
       isLoading = true;
     });
-   try{
-     if (!await InternetConnection().hasInternetAccess) {
+    try {
+      if (!await InternetConnection().hasInternetAccess) {
         throw Exception('No internet connection');
       }
-    final user = await register(
-      _emailController.text,
-      _nameController.text,
-      _passwordController.text,
-    );
-    ref.read(userProviderNotifier.notifier).setUser(user);
-    
-   } catch(e){
-    final msg = e.toString().replaceFirst('Exception: ', '');
+      final user = await register(
+        _emailController.text,
+        _nameController.text,
+        _passwordController.text,
+      );
+      ref.read(userProviderNotifier.notifier).setUser(user);
+      Navigator.of(context).pop();
+    } catch (e) {
+      final msg = e.toString().replaceFirst('Exception: ', '');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-   } finally{
-    setState(() {
+    } finally {
+      setState(() {
         isLoading = false;
       });
-   }
-
+    }
   }
 
   @override
@@ -100,6 +99,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your name';
+                      } else if (value.length < 3) {
+                        return 'Name must be at least 3 characters long';
+                      } else if (value.length > 50) {
+                        return 'Name must be less than 50 characters long';
                       }
                       return null;
                     },
