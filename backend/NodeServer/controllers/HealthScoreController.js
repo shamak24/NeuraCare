@@ -1,7 +1,7 @@
 import UserModel from "../models/User.js";
 
 
-const getDiet = async (req,res)=>{
+const getScore = async (req,res)=>{
     const userId = req.user._id;
     try{
         const user = await UserModel.findOne({ userId });
@@ -15,4 +15,4 @@ const getDiet = async (req,res)=>{
     }
 }
 
-export { addDiet, getDiet };
+export { getScore };

@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     healthScore:{
         type: Number,
         default: 0
+    },
+    healthPoints:{
+        type: Number,
+        default: 0
     }
 })
 
