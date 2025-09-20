@@ -2,7 +2,7 @@ enum QuestionType{
   text,
   double,
   int,
-  choice
+  choice,
 }
 
 

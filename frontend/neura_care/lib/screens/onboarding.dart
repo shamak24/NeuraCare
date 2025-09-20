@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/data/onboarding_questions.dart';
 import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/providers/user.dart';
@@ -37,16 +38,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     setState(() {
       answers[currentQuestionIndex] = answer;
     });
+    if(!await InternetConnection().hasInternetAccess){
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No internet connection')),
+        );
+      }
+      return;
+    }
     final vitals = Vitals(
-      bloodPressure: double.parse(answers[2]),
-      heartRate: int.parse(answers[3]),
-      sugarLevel: double.parse(answers[4]),
-      weight: double.parse(answers[5]),
-      cholesterol: double.parse(answers[6]),
-      activityLevel: answers[7],
-      gender: answers[1],
       age: int.parse(answers[0]),
-      height: double.parse(answers[8]),
+      gender: answers[1],
+      bpHigh: int.parse(answers[2]),
+      bpLow: int.parse(answers[3]),
+      heartRate: int.parse(answers[4]),
+      sugarLevel: int.parse(answers[5]),
+      weight: double.parse(answers[6]),
+      cholesterol: int.parse(answers[7]),
+      activityLevel: answers[8],
+      height: double.parse(answers[9]),
+      smoking: answers[10] == 'true' ? true : false,
+      drinking: answers[11] == 'true' ? true : false,
+      sleepHours: double.parse(answers[12]),
     );
     print(vitals);
     try{

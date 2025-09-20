@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
-
+import 'package:neura_care/models/diet.dart';
 final String baseUrl = dotenv.env['backendUrl']!;
 
 Future<User> register(String email, String name, String password) async {
@@ -89,16 +89,7 @@ Future<Vitals> updateUserVitals(String token, Vitals vitals) async {
   final response = await http.put(
     Uri.parse('$baseUrl/vitals'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
-    body: jsonEncode({
-      'bloodPressure': vitals.bloodPressure,
-      'heartRate': vitals.heartRate,
-      'sugarLevel': vitals.sugarLevel,
-      'weight': vitals.weight,
-      'cholesterol': vitals.cholesterol,
-      'activityLevel': vitals.activityLevel,
-      "gender": vitals.gender,
-      "age": vitals.age,
-    }),
+    body: jsonEncode(vitals.toJson()),
   );
 
   if (response.statusCode == 200) {
@@ -118,22 +109,11 @@ Future<void> createUserVitals(String token, Vitals vitals) async {
   final response = await http.post(
     Uri.parse('$baseUrl/vitals'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
-    body: jsonEncode({
-      'bloodPressure': vitals.bloodPressure,
-      'heartRate': vitals.heartRate,
-      'sugarLevel': vitals.sugarLevel,
-      'weight': vitals.weight,
-      'cholesterol': vitals.cholesterol,
-      'activityLevel': vitals.activityLevel,
-      'gender': vitals.gender,
-      'age': vitals.age,
-      'height': vitals.height,
-
-    }),
+    body: jsonEncode(vitals.toJson()),
   );
 
   if (response.statusCode == 201) {
-    return ;
+    return;
   } else {
     if (response.statusCode == 400) {
       throw Exception('Invalid vitals data');
@@ -162,6 +142,27 @@ Future<double> getScore(String token) async {
     } else {
       print(response.statusCode);
       throw Exception('Failed to fetch score');
+    }
+  }
+}
+
+Future<Diet> getDiet(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/dietPlan'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+  );
+  if (response.statusCode == 200) {
+    print("Diet fetched successfully");
+    print(jsonDecode(response.body));
+    return Diet.fromJson(jsonDecode(response.body));
+  } else {
+    if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else if (response.statusCode == 404) {
+      throw Exception('No diet plan found for user');
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to fetch diet plan');
     }
   }
 }

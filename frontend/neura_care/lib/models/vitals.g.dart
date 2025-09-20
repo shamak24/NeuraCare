@@ -17,40 +17,52 @@ class VitalsAdapter extends TypeAdapter<Vitals> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Vitals(
-      bloodPressure: fields[0] as double,
-      heartRate: fields[1] as int,
-      sugarLevel: fields[2] as double,
-      weight: fields[3] as double,
-      cholesterol: fields[4] as double,
-      activityLevel: fields[5] as String,
-      gender: fields[6] as String,
-      age: fields[7] as int,
-      height: fields[8] as double,
+      bpHigh: fields[0] as int,
+      bpLow: fields[1] as int,
+      heartRate: fields[2] as int,
+      sugarLevel: fields[3] as int,
+      weight: fields[4] as double,
+      cholesterol: fields[5] as int,
+      activityLevel: fields[6] as String,
+      gender: fields[7] as String,
+      age: fields[8] as int,
+      height: fields[9] as double,
+      smoking: fields[10] as bool,
+      drinking: fields[11] as bool,
+      sleepHours: fields[12] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, Vitals obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(13)
       ..writeByte(0)
-      ..write(obj.bloodPressure)
+      ..write(obj.bpHigh)
       ..writeByte(1)
-      ..write(obj.heartRate)
+      ..write(obj.bpLow)
       ..writeByte(2)
-      ..write(obj.sugarLevel)
+      ..write(obj.heartRate)
       ..writeByte(3)
-      ..write(obj.weight)
+      ..write(obj.sugarLevel)
       ..writeByte(4)
-      ..write(obj.cholesterol)
+      ..write(obj.weight)
       ..writeByte(5)
-      ..write(obj.activityLevel)
+      ..write(obj.cholesterol)
       ..writeByte(6)
-      ..write(obj.gender)
+      ..write(obj.activityLevel)
       ..writeByte(7)
-      ..write(obj.age)
+      ..write(obj.gender)
       ..writeByte(8)
-      ..write(obj.height);
+      ..write(obj.age)
+      ..writeByte(9)
+      ..write(obj.height)
+      ..writeByte(10)
+      ..write(obj.smoking)
+      ..writeByte(11)
+      ..write(obj.drinking)
+      ..writeByte(12)
+      ..write(obj.sleepHours);
   }
 
   @override

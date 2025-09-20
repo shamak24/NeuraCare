@@ -1,7 +1,12 @@
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:collection/collection.dart';
 
 part "diet.g.dart";
+enum CuisineType{
+  North, South, Indian, Mexican, Italian, West, Continental
+}
+
 @HiveType(typeId: 2)
 class Diet{
   @HiveField(0)
@@ -15,12 +20,8 @@ class Diet{
   @HiveField(4)
   bool keto;
   @HiveField(5)
-  bool paleo;
+  List<CuisineType> cuisinePreferences;
   @HiveField(6)
-  bool lowFodmap;
-  @HiveField(7)
-  bool pescatarian;
-  @HiveField(8)
   List<String> allergies;
 
   Diet({
@@ -29,9 +30,71 @@ class Diet{
     required this.glutenFree,
     required this.lactoseFree,
     required this.keto,
-    required this.paleo,
-    required this.lowFodmap,
-    required this.pescatarian,
+    required this.cuisinePreferences,
     required this.allergies,
   });
+
+  factory Diet.empty(){
+    return Diet(
+      vegan: false,
+      vegetarian: false,
+      glutenFree: false,
+      lactoseFree: false,
+      keto: false,
+      cuisinePreferences: [],
+      allergies: [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'vegan': vegan,
+      'vegetarian': vegetarian,
+      'glutenFree': glutenFree,
+      'lactoseFree': lactoseFree,
+      'keto': keto,
+      'cuisinePreference': cuisinePreferences.map((e) => e.toString().split('.').last).toList(),
+      'allergies': allergies,
+    };
+  }
+  factory Diet.fromJson(Map<String, dynamic> json) {
+    return Diet(
+      vegan: json['vegan'],
+      vegetarian: json['vegetarian'],
+      glutenFree: json['glutenFree'],
+      lactoseFree: json['lactoseFree'],
+      keto: json['keto'],
+      cuisinePreferences: (json['cuisinePreference'] as List<dynamic>).map((e) => CuisineType.values.firstWhere((element) => element.toString() == 'CuisineType.$e')).toList(),
+      allergies: List<String>.from(json['allergies']),
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Diet(vegan: $vegan, vegetarian: $vegetarian, glutenFree: $glutenFree, lactoseFree: $lactoseFree, keto: $keto, cuisinePreferences: $cuisinePreferences, allergies: $allergies)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Diet &&
+        other.vegan == vegan &&
+        other.vegetarian == vegetarian &&
+        other.glutenFree == glutenFree &&
+        other.lactoseFree == lactoseFree &&
+        other.keto == keto &&
+        ListEquality().equals(other.cuisinePreferences, cuisinePreferences) &&
+        ListEquality().equals(other.allergies, allergies);
+  }
+  @override
+  int get hashCode {
+    return vegan.hashCode ^
+        vegetarian.hashCode ^
+        glutenFree.hashCode ^
+        lactoseFree.hashCode ^
+        keto.hashCode ^
+        cuisinePreferences.hashCode ^
+        allergies.hashCode;
+  }
 }

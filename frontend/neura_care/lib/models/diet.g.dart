@@ -22,17 +22,15 @@ class DietAdapter extends TypeAdapter<Diet> {
       glutenFree: fields[2] as bool,
       lactoseFree: fields[3] as bool,
       keto: fields[4] as bool,
-      paleo: fields[5] as bool,
-      lowFodmap: fields[6] as bool,
-      pescatarian: fields[7] as bool,
-      allergies: (fields[8] as List).cast<String>(),
+      cuisinePreferences: (fields[5] as List).cast<CuisineType>(),
+      allergies: (fields[6] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Diet obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.vegan)
       ..writeByte(1)
@@ -44,12 +42,8 @@ class DietAdapter extends TypeAdapter<Diet> {
       ..writeByte(4)
       ..write(obj.keto)
       ..writeByte(5)
-      ..write(obj.paleo)
+      ..write(obj.cuisinePreferences)
       ..writeByte(6)
-      ..write(obj.lowFodmap)
-      ..writeByte(7)
-      ..write(obj.pescatarian)
-      ..writeByte(8)
       ..write(obj.allergies);
   }
 

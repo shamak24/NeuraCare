@@ -8,7 +8,7 @@ import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/login.dart';
-import 'package:neura_care/screens/home.dart';
+import 'package:neura_care/screens/tabs.dart';
 import 'package:neura_care/screens/onboarding.dart';
 import 'package:neura_care/services/api.dart';
 import 'package:neura_care/services/hive_setup.dart';
@@ -92,11 +92,9 @@ class _MyAppState extends ConsumerState<MyApp> {
                 ),
               ),
             );
-          } else if (snapshot.hasError){
+          } else if (snapshot.hasError) {
             return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
+              body: Center(child: Text('Error: ${snapshot.error}')),
             );
           }
           return Consumer(
@@ -109,7 +107,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                 if (vitalsProvider == Vitals.empty()) {
                   return const OnboardingScreen();
                 }
-                return HomeScreen();
+                return TabsScreen();
               }
             },
           );
