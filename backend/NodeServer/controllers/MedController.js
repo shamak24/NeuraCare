@@ -32,4 +32,21 @@ const getMedsByUser = async (req, res) => {
     }
 }
 
-export { addMed, getMedsByUser };
+const removeMed = async (req, res) =>{
+    try{
+        const userId = req.user._id;
+        const medName = req.body.medName;
+        const med = await MedModel.findOne({userId: userId, medName: medName});
+        if(!med){
+            return res.status(404).json({message: "Medication not found", success: false});
+        }
+        await MedModel.deleteOne({userId: userId, medName: medName});
+        res.status(200).json({message: "Medication removed successfully", success: true});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: "Internal Server error", success: false});
+    }
+    
+}
+
+export { addMed, getMedsByUser, removeMed };

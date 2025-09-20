@@ -47,7 +47,15 @@ const vitalSchema = new mongoose.Schema({
     },
     sleepHours:{
         type: Number,
-        required: false
+        required: true
+    },
+    smoking:{
+        type: Boolean,
+        default: false
+    },
+    drinking:{
+        type: Boolean,
+        default: false
     }
 },
 { timestamps: true } // Adds createdAt and updatedAt fields
