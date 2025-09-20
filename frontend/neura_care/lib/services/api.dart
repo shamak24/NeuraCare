@@ -146,9 +146,9 @@ Future<double> getScore(String token) async {
   }
 }
 
-Future<Diet> getDiet(String token) async {
+Future<Diet> getUserDiet(String token) async {
   final response = await http.get(
-    Uri.parse('$baseUrl/dietPlan'),
+    Uri.parse('$baseUrl/diet'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
   );
   if (response.statusCode == 200) {
@@ -163,6 +163,27 @@ Future<Diet> getDiet(String token) async {
     } else {
       print(response.statusCode);
       throw Exception('Failed to fetch diet plan');
+    }
+  }
+}
+
+Future<void> updateUserDiet(String token, Diet diet) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/diet'),
+    headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
+    body: jsonEncode(diet.toJson()),
+  );
+
+  if (response.statusCode == 200) {
+    return ;
+  } else {
+    print(response.statusCode);
+    if (response.statusCode == 400) {
+      throw Exception('Invalid diet data');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized access');
+    } else {
+      throw Exception('Failed to update diet plan');
     }
   }
 }

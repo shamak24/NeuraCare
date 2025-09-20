@@ -36,6 +36,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("NeuraCare"),
+        backgroundColor:  Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));

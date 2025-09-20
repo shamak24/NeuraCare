@@ -12,7 +12,7 @@ Future<void> setupHive() async {
   Hive.registerAdapter(PreviousHistoryAdapter());
   Hive.registerAdapter(VitalsAdapter());
   Hive.registerAdapter(DailyMealsAdapter());
-
+  Hive.registerAdapter(CuisineTypeAdapter());
   await Hive.openBox<User>('userBox');
   await Hive.openBox<Diet>('dietBox');
   await Hive.openBox<PreviousHistory>('prevHistoryBox');

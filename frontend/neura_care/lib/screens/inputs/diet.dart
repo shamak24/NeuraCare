@@ -1,8 +1,11 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/providers/diet.dart';
 import 'package:neura_care/models/diet.dart';
+import 'package:neura_care/providers/user.dart';
+import 'package:neura_care/services/api.dart';
 
 class DietInputScreen extends ConsumerStatefulWidget {
   const DietInputScreen({super.key});
@@ -66,7 +69,7 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> {
     });
   }
 
-  void _submitForm() {
+  void _submitForm() async{
     if (_formKey.currentState!.validate()) {
       final diet = Diet(
         vegan: _vegan,
@@ -77,8 +80,14 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> {
         cuisinePreferences: _selectedCuisines,
         allergies: _allergies,
       );
-
-
+      
+      if(InternetConnection().hasInternetAccess == false){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No internet connection')),
+        );
+        return;
+      }
+      await updateUserDiet(ref.read(userProviderNotifier).token!, diet);
       ref.read(dietProvider.notifier).setDiet(diet);
 
       // Show success message
