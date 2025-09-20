@@ -7,7 +7,11 @@ const vitalSchema = new mongoose.Schema({
         required: true,
         unique: true 
     },
-    bloodPressure: {
+    bpHigh:{
+        type: Number,
+        required: true
+    },
+    bpLow:{
         type: Number,
         required: true
     },
