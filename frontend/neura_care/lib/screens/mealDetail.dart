@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:neura_care/models/meal.dart';
 
-class MealScreen extends StatelessWidget{
-  const MealScreen({super.key, required this.meal});
+class MealDetailScreen extends StatelessWidget{
+  const MealDetailScreen({super.key, required this.meal});
   final Meal meal;
 
   @override

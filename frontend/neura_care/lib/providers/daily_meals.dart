@@ -32,7 +32,20 @@ class DailyMealsProvider extends StateNotifier<DailyMeals>{
       date: DateTime.now(),
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is DailyMealsProvider &&
+        other.state.breakfast == state.breakfast &&
+        other.state.lunch == state.lunch &&
+        other.state.dinner == state.dinner;
+  }
+  @override
+  int get hashCode => state.breakfast.hashCode ^ state.lunch.hashCode ^ state.dinner.hashCode;
 }
+
 
 final dailyMealsProviderNotifier = StateNotifierProvider<DailyMealsProvider, DailyMeals>((ref) {
   return DailyMealsProvider();

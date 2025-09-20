@@ -4,7 +4,9 @@ import 'package:neura_care/screens/inputs/diet.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/providers/daily_meals.dart';
-
+import 'package:neura_care/screens/inputs/prev_history.dart';
+import 'package:neura_care/providers/diet.dart';
+import 'package:neura_care/providers/prev_history.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -26,6 +28,9 @@ class SettingsScreen extends ConsumerWidget {
                 ref.read(vitalsProviderNotifier.notifier).clearVitals();
                 ref.read(userProviderNotifier.notifier).clearUser();
                 ref.read(dailyMealsProviderNotifier.notifier).clearDailyMeals();
+                ref.read(dietProvider.notifier).clearDiet();
+                ref.read(prevHistoryProviderNotifier.notifier).clearPrevHistory();
+                Navigator.of(context).pop();
               },
               child: const Text('Logout'),
             ),
@@ -38,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
@@ -57,9 +62,9 @@ class SettingsScreen extends ConsumerWidget {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Diet Preferences Card
             Card(
               elevation: 2,
@@ -78,9 +83,27 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
+            Card(
+              elevation: 2,
+              child: ListTile(
+                leading: const Icon(Icons.medical_information),
+                title: const Text('Medical Information'),
+                subtitle: const Text('Update your medical information'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PreviousHistoryScreen(),
+                    ),
+                  );
+                },
+              ),
+            ),
+
             // Account Section
             Text(
               'Account',
@@ -89,17 +112,14 @@ class SettingsScreen extends ConsumerWidget {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Logout Card
             Card(
               elevation: 2,
               child: ListTile(
-                leading: Icon(
-                  Icons.logout,
-                  color: theme.colorScheme.error,
-                ),
+                leading: Icon(Icons.logout, color: theme.colorScheme.error),
                 title: Text(
                   'Logout',
                   style: TextStyle(
@@ -115,9 +135,9 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => _showLogoutDialog(context, ref),
               ),
             ),
-            
+
             const Spacer(),
-            
+
             // App Version Info
             Center(
               child: Text(

@@ -5,7 +5,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
+import 'package:neura_care/providers/daily_meals.dart';
 import 'package:neura_care/providers/diet.dart';
+import 'package:neura_care/providers/prev_history.dart';
 import 'package:neura_care/providers/theme.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
@@ -66,6 +68,16 @@ class _MyAppState extends ConsumerState<MyApp> {
         ref.read(dietProvider.notifier).loadDiet();
       } catch (e) {
         print('Error loading diet: $e');
+      }
+      try{
+        ref.read(dailyMealsProviderNotifier.notifier).loadDailyMeals();
+      } catch (e) {
+        print('Error loading daily meals: $e');
+      }
+      try{
+        ref.read(prevHistoryProviderNotifier.notifier).loadPrevHistory();
+      } catch (e) {
+        print('Error loading previous history: $e');
       }
     }
 

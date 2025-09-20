@@ -16,8 +16,8 @@ class UserProvider extends StateNotifier<User> {
     saveUser(user);
     state = user;
   }
-  void clearUser() {
-    clearUserData();
+  void clearUser() async {
+    await deleteAllData();
     state = User.empty();
     
   }

@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:collection/collection.dart';
 
 part 'meal.g.dart';
 
@@ -35,4 +36,21 @@ class Meal {
       instructions: List<String>.from(json['instructions'] ?? []),
     );
   }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Meal &&
+        other.mealName == mealName &&
+        ListEquality().equals(other.ingredients, ingredients) &&
+        ListEquality().equals(other.instructions, instructions);
+  }
+
+  @override
+  int get hashCode =>
+      mealName.hashCode ^ ingredients.hashCode ^ instructions.hashCode;
+
+  @override
+  String toString() =>
+      'Meal(mealName: $mealName, ingredients: $ingredients, instructions: $instructions)';
 }
