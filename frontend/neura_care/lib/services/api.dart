@@ -6,7 +6,7 @@ import 'package:neura_care/models/prev_history.dart';
 import 'package:neura_care/models/user.dart';
 import 'package:neura_care/models/vitals.dart';
 import 'package:neura_care/models/diet.dart';
-import 'package:neura_care/models/dailyMeals.dart';
+import 'package:neura_care/models/daily_meals.dart';
 final String baseUrl = dotenv.env['backendUrl']!;
 
 Future<User> register(String email, String name, String password) async {
@@ -176,7 +176,7 @@ Future<void> updateUserDiet(String token, Diet diet) async {
     body: jsonEncode(diet.toJson()),
   );
 
-  if (response.statusCode == 201) {
+  if (response.statusCode == 201 || response.statusCode == 200) {
     return;
   } else {
     print(response.statusCode);
@@ -240,10 +240,10 @@ Future<void> updateHistory(String token, PreviousHistory history) async {
   final response = await http.post(
     Uri.parse('$baseUrl/history'),
     headers: {'Content-Type': 'application/json', 'Cookie': 'token=$token'},
-    body: jsonEncode({history.toJson()}),
+    body: jsonEncode(history.toJson()),
   );
   print(jsonDecode(response.body));
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 || response.statusCode == 201) {
     
     return ;
   } else {

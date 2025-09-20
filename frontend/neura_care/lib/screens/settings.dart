@@ -7,6 +7,9 @@ import 'package:neura_care/providers/daily_meals.dart';
 import 'package:neura_care/screens/inputs/prev_history.dart';
 import 'package:neura_care/providers/diet.dart';
 import 'package:neura_care/providers/prev_history.dart';
+import 'package:neura_care/services/notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -35,6 +38,95 @@ class SettingsScreen extends ConsumerWidget {
               child: const Text('Logout'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _showPermissionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Row(
+                children: [
+                  Icon(Icons.notifications),
+                  SizedBox(width: 8),
+                  Text('Notification Permissions'),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Medication reminders require notification permissions and exact alarm permissions to work properly.',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 16),
+                  FutureBuilder<bool>(
+                    future: checkNotificationPermissions(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      
+                      bool hasPermissions = snapshot.data ?? false;
+                      return Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: hasPermissions ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: hasPermissions ? Colors.green : Colors.red,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              hasPermissions ? Icons.check_circle : Icons.error,
+                              color: hasPermissions ? Colors.green : Colors.red,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                hasPermissions 
+                                    ? 'All permissions granted'
+                                    : 'Permissions required',
+                                style: TextStyle(
+                                  color: hasPermissions ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Close'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    bool granted = await requestNotificationPermissions();
+                    if (!granted) {
+                      // Open app settings if permissions can't be granted
+                      await openAppSettings();
+                    }
+                    setState(() {}); // Refresh the dialog
+                  },
+                  child: const Text('Grant Permissions'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -103,6 +195,33 @@ class SettingsScreen extends ConsumerWidget {
                 },
               ),
             ),
+
+            const SizedBox(height: 24),
+
+            // Permissions Section
+            Text(
+              'Permissions',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Notification Permissions Card
+            Card(
+              elevation: 2,
+              child: ListTile(
+                leading: const Icon(Icons.notifications),
+                title: const Text('Notification Permissions'),
+                subtitle: const Text('Manage notification and alarm permissions'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () => _showPermissionsDialog(context),
+              ),
+            ),
+
+            const SizedBox(height: 24),
 
             // Account Section
             Text(

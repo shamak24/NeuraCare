@@ -1,7 +1,7 @@
 
 import 'package:neura_care/models/meal.dart';
 import "package:hive_flutter/hive_flutter.dart";
-part 'dailyMeals.g.dart';
+part 'daily_meals.g.dart';
 @HiveType(typeId: 4)
 class DailyMeals {
   @HiveField(0)
@@ -25,7 +25,6 @@ class DailyMeals {
       breakfast: Meal.empty(),
       lunch: Meal.empty(),
       dinner: Meal.empty(),
-      // Use a fixed epoch date for the empty sentinel so equality is stable
       date: DateTime.fromMillisecondsSinceEpoch(0),
     );
   }
