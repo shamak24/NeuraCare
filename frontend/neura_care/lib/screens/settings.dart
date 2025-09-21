@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:neura_care/providers/med_list.dart';
 import 'package:neura_care/screens/inputs/diet.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
@@ -29,10 +30,13 @@ class SettingsScreen extends ConsumerWidget {
               onPressed: () {
                 Navigator.of(context).pop();
                 ref.read(vitalsProviderNotifier.notifier).clearVitals();
-                ref.read(userProviderNotifier.notifier).clearUser();
                 ref.read(dailyMealsProviderNotifier.notifier).clearDailyMeals();
                 ref.read(dietProvider.notifier).clearDiet();
-                ref.read(prevHistoryProviderNotifier.notifier).clearPrevHistory();
+                ref
+                    .read(prevHistoryProviderNotifier.notifier)
+                    .clearPrevHistory();
+                ref.read(medListProviderNotifier.notifier).clearMeds();
+                ref.read(userProviderNotifier.notifier).clearUser();
                 Navigator.of(context).pop();
               },
               child: const Text('Logout'),
@@ -72,12 +76,14 @@ class SettingsScreen extends ConsumerWidget {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
-                      
+
                       bool hasPermissions = snapshot.data ?? false;
                       return Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: hasPermissions ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                          color: hasPermissions
+                              ? Colors.green.withOpacity(0.1)
+                              : Colors.red.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
                             color: hasPermissions ? Colors.green : Colors.red,
@@ -92,11 +98,13 @@ class SettingsScreen extends ConsumerWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                hasPermissions 
+                                hasPermissions
                                     ? 'All permissions granted'
                                     : 'Permissions required',
                                 style: TextStyle(
-                                  color: hasPermissions ? Colors.green : Colors.red,
+                                  color: hasPermissions
+                                      ? Colors.green
+                                      : Colors.red,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -215,7 +223,9 @@ class SettingsScreen extends ConsumerWidget {
               child: ListTile(
                 leading: const Icon(Icons.notifications),
                 title: const Text('Notification Permissions'),
-                subtitle: const Text('Manage notification and alarm permissions'),
+                subtitle: const Text(
+                  'Manage notification and alarm permissions',
+                ),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () => _showPermissionsDialog(context),
               ),
