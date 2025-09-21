@@ -14,7 +14,8 @@ It combines:
 - 🩺 **Vitals & Symptoms Tracking**  
 - 💊 **Medication Adherence**  
 - 🥗 **Nutrition & Lifestyle Guidance**  
-- 🤖 **AI-Powered Predictive Analytics**  
+- 🤖 **AI-Powered Predictive Analytics**
+- 🤖 **Personalised chat bot for any assistance** 
 
 Built as a **cross-platform Flutter app** with an **Express backend deployed on Render**. It ensures **scalability**, **real-time synchronization**, and **secure health data management**.  
 
