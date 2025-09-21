@@ -1,5 +1,6 @@
 # NeuraCare 🩺✨  
 *AI-Powered Chronic Disease Tracking & Comorbidity Management Platform*  
+- Youtube demo link - <a href="https://www.youtube.com/watch?v=0hiiYNpcNYk">Watch the demo. </a>
 
 <p align="center">
   <img src="./frontend/neura_care/images/mascotMedic.png" alt="NeuraCare Logo" width="120"/>
