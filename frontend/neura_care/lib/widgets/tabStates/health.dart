@@ -10,6 +10,65 @@ import 'package:neura_care/screens/inputs/setMedReminder.dart';
 import 'package:neura_care/services/notifications.dart';
 import 'package:neura_care/themes.dart';
 
+class _FloatMascot extends StatefulWidget {
+  final String asset;
+  final double? width;
+  final double? height;
+  final Duration duration;
+
+  const _FloatMascot({Key? key, required this.asset, this.width, this.height, this.duration = const Duration(milliseconds: 1400)}) : super(key: key);
+
+  @override
+  State<_FloatMascot> createState() => _FloatMascotState();
+}
+
+class _FloatMascotState extends State<_FloatMascot> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _yAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: widget.duration);
+    _yAnim = Tween<double>(begin: -6.0, end: 6.0).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _ctrl.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        try {
+          await _ctrl.animateTo(1.0, duration: const Duration(milliseconds: 200));
+          await _ctrl.animateBack(0.0, duration: const Duration(milliseconds: 200));
+          _ctrl.repeat(reverse: true);
+        } catch (_) {}
+      },
+      child: AnimatedBuilder(
+        animation: _yAnim,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(0, _yAnim.value),
+            child: child,
+          );
+        },
+        child: Image.asset(
+          widget.asset,
+          width: widget.width,
+          height: widget.height,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
 class MedsTab extends ConsumerStatefulWidget {
   const MedsTab({super.key});
 
@@ -98,10 +157,7 @@ class _MedsTabState extends ConsumerState<MedsTab>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Center(
-                      child: Image.asset(
-                        'images/fullBodyMascot.png',
-                        height: 160,
-                      ),
+                      child: _FloatMascot(asset: 'images/mascotMedic.png', height: 160),
                     ),
                   ),
                 ),

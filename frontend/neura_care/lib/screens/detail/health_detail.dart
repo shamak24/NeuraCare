@@ -61,6 +61,11 @@ class HealthDetailScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: const Image(image: AssetImage('images/mascotAnalysis.png'),height: 180,),
+                    )),
+
                     const SizedBox(height: 8), // Extra spacing at top
                     // User Info Card (now includes age & gender from vitals)
                     _buildUserInfoCard(context, theme, user, ref),

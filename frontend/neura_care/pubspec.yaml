@@ -76,6 +76,9 @@ flutter:
     - .env
     - images/fullBodyMascot.png
     - images/mascotFace.png
+    - images/mascotVege.png
+    - images/mascotMedic.png
+    - images/mascotAnalysis.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

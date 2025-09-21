@@ -14,7 +14,7 @@ import 'package:neura_care/screens/inputs/prev_history.dart';
 import 'package:neura_care/screens/inputs/diet.dart';
 import 'package:neura_care/screens/detail/diseases.dart';
 import 'package:neura_care/screens/detail/health_detail.dart';
-import 'package:neura_care/screens/mealDetail.dart';
+import 'package:neura_care/screens/detail/meal.dart';
 import 'package:neura_care/themes.dart';
 
 class _WobbleMascot extends StatefulWidget {

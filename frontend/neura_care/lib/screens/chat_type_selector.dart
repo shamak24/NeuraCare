@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:neura_care/screens/chat.dart';
+import 'package:neura_care/screens/inputs/chat.dart';
 import 'package:neura_care/providers/theme.dart';
 import 'package:neura_care/themes.dart';
 

@@ -13,7 +13,7 @@ import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/vitals.dart';
 import 'package:neura_care/screens/auth/login.dart';
 import 'package:neura_care/screens/tabs.dart';
-import 'package:neura_care/screens/onboarding.dart';
+import 'package:neura_care/screens/inputs/onboarding.dart';
 import 'package:neura_care/services/api.dart';
 import 'package:neura_care/services/hive_setup.dart';
 import 'package:neura_care/themes.dart';

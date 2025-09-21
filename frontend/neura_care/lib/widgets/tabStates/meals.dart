@@ -7,9 +7,59 @@ import 'package:neura_care/providers/diet.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/providers/theme.dart';
 import 'package:neura_care/screens/inputs/diet.dart';
-import 'package:neura_care/screens/mealDetail.dart';
+import 'package:neura_care/screens/detail/meal.dart';
 import 'package:neura_care/services/api.dart';
 import 'package:neura_care/themes.dart';
+
+class _GentleMascot extends StatefulWidget {
+  final String asset;
+  final double height;
+
+  const _GentleMascot({Key? key, required this.asset, this.height = 160}) : super(key: key);
+
+  @override
+  State<_GentleMascot> createState() => _GentleMascotState();
+}
+
+class _GentleMascotState extends State<_GentleMascot> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _floatAnim;
+  late final Animation<double> _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+  _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1800));
+    _floatAnim = Tween<double>(begin: -6.0, end: 6.0).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _scaleAnim = Tween<double>(begin: 0.985, end: 1.02).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _ctrl.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) {
+        final dy = _floatAnim.value;
+        final scale = _scaleAnim.value;
+        return Transform.translate(
+          offset: Offset(0, dy),
+          child: Transform.scale(
+            scale: scale,
+            child: child,
+          ),
+        );
+      },
+      child: Image.asset(widget.asset, height: widget.height, fit: BoxFit.contain),
+    );
+  }
+}
 
 class MealsTab extends ConsumerWidget{
   const MealsTab({super.key});
@@ -203,7 +253,7 @@ class MealsTab extends ConsumerWidget{
               ),
             ],
           ),
-          Center(child: Image(image: AssetImage('images/fullBodyMascot.png'),height: 160,))
+          Center(child: _GentleMascot(asset: 'images/mascotVege.png', height: 180)),
         ],
       ),
     );
