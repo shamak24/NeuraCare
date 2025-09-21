@@ -114,16 +114,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
             ),
           );
           
-          _showUserNotification('NeuraCare Bot replied');
         } catch (e) {
-          _chatController.insertMessage(
-            TextMessage(
-              id: const Uuid().v4(),
-              authorId: 'neuracare_bot',
-              createdAt: DateTime.now().toUtc(),
-              text: 'I apologize, but I\'m having trouble processing your request right now. Please try again in a moment.',
-            ),
-          );
+          print(e);
         } finally {
           if (mounted) {
             setState(() {
