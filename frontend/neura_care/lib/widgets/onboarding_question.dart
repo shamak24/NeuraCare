@@ -5,7 +5,7 @@ import "package:neura_care/data/onboarding_questions.dart";
 class OnboardingQuestion extends StatefulWidget {
   final Function(String) onAnswered;
   final Function() onPrevious;
-  final Function(String) onSubmit;
+  final Future<void> Function(String) onSubmit;
   final int currentIndex;
   final dynamic previousAnswer;
 
@@ -26,6 +26,7 @@ class _OnboardingQuestionState extends State<OnboardingQuestion> {
   String? selectedValue;
   late final TextEditingController controller;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -263,20 +264,44 @@ class _OnboardingQuestionState extends State<OnboardingQuestion> {
             SizedBox(
               height: 48,
               child: isLastQuestion
-                  ? ElevatedButton.icon(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          widget.onSubmit(getAnswer());
-                        }
-                      },
-                      icon: const Icon(Icons.check),
-                      label: const Text('Submit'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        backgroundColor: theme.colorScheme.primary,
-                        foregroundColor: theme.colorScheme.onPrimary,
-                      ),
-                    )
+                      ? ElevatedButton(
+                          onPressed: _isSubmitting
+                              ? null
+                              : () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    setState(() => _isSubmitting = true);
+                                    try {
+                                      await widget.onSubmit(getAnswer());
+                                    } finally {
+                                      if (mounted) setState(() => _isSubmitting = false);
+                                    }
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.onPrimary,
+                          ),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
+                            child: _isSubmitting
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2.0, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                                  )
+                                : Row(
+                                    key: const ValueKey('submit_label'),
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: const [
+                                      Icon(Icons.check),
+                                      SizedBox(width: 8),
+                                      Text('Submit'),
+                                    ],
+                                  ),
+                          ),
+                        )
                   : ElevatedButton.icon(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {

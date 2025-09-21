@@ -112,11 +112,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-      
+                      // Progress Section
                       _buildProgressSection(theme, progress),
                       
                       const SizedBox(height: 32),
-
+                      
+                      // Question Card
                       _buildQuestionCard(theme),
                     ],
                   ),

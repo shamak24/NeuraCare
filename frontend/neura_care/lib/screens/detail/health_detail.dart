@@ -28,7 +28,6 @@ class HealthDetailScreen extends ConsumerWidget {
         ),
         child: CustomScrollView(
           slivers: [
-        
             // Consumer to provide WidgetRef for refresh action
             Consumer(
               builder: (context, ref, _) {
@@ -44,7 +43,9 @@ class HealthDetailScreen extends ConsumerWidget {
                         if (user.token == null) return;
                         final healthData = await getScore(user.token!);
                         // healthData expected to be a map with keys: healthScore, preventiveMeasures, comorbidityAdvice
-                        ref.read(userProviderNotifier.notifier).updateHealthInfo(healthData);
+                        ref
+                            .read(userProviderNotifier.notifier)
+                            .updateHealthInfo(healthData);
                       } catch (e) {
                         // optionally show a SnackBar or logging
                       }
@@ -61,31 +62,33 @@ class HealthDetailScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      child: const Image(image: AssetImage('images/mascotAnalysis.png'),height: 180,),
-                    )),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: const Image(
+                          image: AssetImage('images/mascotAnalysis.png'),
+                          height: 180,
+                        ),
+                      ),
+                    ),
 
-                    const SizedBox(height: 8), // Extra spacing at top
-                    // User Info Card (now includes age & gender from vitals)
+                    const SizedBox(height: 8),
+
                     _buildUserInfoCard(context, theme, user, ref),
-                    
-                    const SizedBox(height: 28), // Increased spacing
-                    
-                    // Preventive Measures Section
+
+                    const SizedBox(height: 28),
+
                     _buildPreventiveMeasuresSection(context, theme, user),
-                    
+
                     const SizedBox(height: 16),
                     // Risks Section
                     _buildRisksSection(context, theme, user),
 
                     const SizedBox(height: 28), // Increased spacing
-                    
                     // Comorbidity Advice Section
                     _buildComorbidityAdviceSection(context, theme, user),
-                    
+
                     const SizedBox(height: 28), // Increased spacing
-                    
                     // Vitals Section (show after comorbidity advice)
                     _buildVitalsSection(context, theme, ref),
 
@@ -93,7 +96,7 @@ class HealthDetailScreen extends ConsumerWidget {
 
                     // Health Score Breakdown
                     _buildHealthScoreBreakdown(context, theme, user),
-                    
+
                     const SizedBox(height: 40), // Extra spacing at bottom
                   ],
                 ),
@@ -105,8 +108,12 @@ class HealthDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildVitalsSection(BuildContext context, ThemeData theme, WidgetRef ref) {
-  final vitals = ref.watch(vitalsProviderNotifier);
+  Widget _buildVitalsSection(
+    BuildContext context,
+    ThemeData theme,
+    WidgetRef ref,
+  ) {
+    final vitals = ref.watch(vitalsProviderNotifier);
 
     return Container(
       width: double.infinity,
@@ -142,7 +149,9 @@ class HealthDetailScreen extends ConsumerWidget {
               const SizedBox(width: 16),
               Text(
                 'Vitals',
-                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -175,15 +184,30 @@ class HealthDetailScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildUserInfoCard(BuildContext context, ThemeData theme, User user, WidgetRef ref) {
+  Widget _buildUserInfoCard(
+    BuildContext context,
+    ThemeData theme,
+    User user,
+    WidgetRef ref,
+  ) {
     final vitals = ref.watch(vitalsProviderNotifier);
 
     return Container(
@@ -339,7 +363,11 @@ class HealthDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPreventiveMeasuresSection(BuildContext context, ThemeData theme, User user) {
+  Widget _buildPreventiveMeasuresSection(
+    BuildContext context,
+    ThemeData theme,
+    User user,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -395,7 +423,7 @@ class HealthDetailScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 20),
-          
+
           if (user.preventiveMeasures.isEmpty) ...[
             Container(
               width: double.infinity,
@@ -506,7 +534,9 @@ class HealthDetailScreen extends ConsumerWidget {
                   children: [
                     Text(
                       'Risks',
-                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -547,14 +577,36 @@ class HealthDetailScreen extends ConsumerWidget {
               ),
             ),
           ] else ...[
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: user.risks.map((r) {
-                return Chip(
-                  label: Text(r, style: theme.textTheme.bodySmall),
-                  backgroundColor: theme.colorScheme.errorContainer,
-                  avatar: Icon(Icons.health_and_safety, size: 18, color: theme.colorScheme.onErrorContainer),
+                return Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.errorContainer.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.colorScheme.errorContainer.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.health_and_safety,
+                        size: 18,
+                        color: theme.colorScheme.onErrorContainer,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          r,
+                          style: theme.textTheme.bodyMedium,
+                          softWrap: true,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             ),
@@ -564,7 +616,11 @@ class HealthDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildComorbidityAdviceSection(BuildContext context, ThemeData theme, User user) {
+  Widget _buildComorbidityAdviceSection(
+    BuildContext context,
+    ThemeData theme,
+    User user,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -620,7 +676,7 @@ class HealthDetailScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 20),
-          
+
           if (user.comorbidityAdvice.isEmpty) ...[
             Container(
               width: double.infinity,
@@ -659,9 +715,7 @@ class HealthDetailScreen extends ConsumerWidget {
               ),
               child: Text(
                 user.comorbidityAdvice,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  height: 1.4,
-                ),
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.4),
               ),
             ),
           ],
@@ -670,7 +724,11 @@ class HealthDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHealthScoreBreakdown(BuildContext context, ThemeData theme, User user) {
+  Widget _buildHealthScoreBreakdown(
+    BuildContext context,
+    ThemeData theme,
+    User user,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -726,7 +784,7 @@ class HealthDetailScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // Health Score Bar
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -809,11 +867,15 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.user,
     required this.theme,
     this.onRefresh,
-  })  : _minExtent = minExtent,
-        _maxExtent = maxExtent;
+  }) : _minExtent = minExtent,
+       _maxExtent = maxExtent;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -840,12 +902,16 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
             final scoreStyle = theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.primary,
-              fontSize: (theme.textTheme.headlineMedium?.fontSize ?? 20) * (0.9 + 0.2 * scale),
+              fontSize:
+                  (theme.textTheme.headlineMedium?.fontSize ?? 20) *
+                  (0.9 + 0.2 * scale),
             );
             final titleStyle = theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
-              fontSize: (theme.textTheme.titleLarge?.fontSize ?? 16) * (0.9 + 0.15 * scale),
+              fontSize:
+                  (theme.textTheme.titleLarge?.fontSize ?? 16) *
+                  (0.9 + 0.15 * scale),
             );
 
             return Stack(
@@ -863,7 +929,9 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: theme.colorScheme.primary.withOpacity(0.25),
+                                color: theme.colorScheme.primary.withOpacity(
+                                  0.25,
+                                ),
                                 blurRadius: 12,
                                 offset: const Offset(0, 8),
                               ),
@@ -883,11 +951,24 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('${user.healthScore.toStringAsFixed(1)}/100', style: scoreStyle),
+                                Text(
+                                  '${user.healthScore.toStringAsFixed(1)}/100',
+                                  style: scoreStyle,
+                                ),
                                 const SizedBox(height: 4),
-                                Text('Health Score', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.75))),
+                                Text(
+                                  'Health Score',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withOpacity(0.75),
+                                  ),
+                                ),
                                 SizedBox(height: verticalGap),
-                                Text('Health Overview', style: titleStyle, textAlign: TextAlign.center),
+                                Text(
+                                  'Health Overview',
+                                  style: titleStyle,
+                                  textAlign: TextAlign.center,
+                                ),
                               ],
                             ),
                           ),
@@ -907,7 +988,10 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: theme.colorScheme.onSurface,
+                      ),
                       onPressed: () => Navigator.of(context).maybePop(),
                       tooltip: 'Back',
                     ),
@@ -961,13 +1045,17 @@ class _RefreshButton extends ConsumerStatefulWidget {
   ConsumerState<_RefreshButton> createState() => _RefreshButtonState();
 }
 
-class _RefreshButtonState extends ConsumerState<_RefreshButton> with SingleTickerProviderStateMixin {
+class _RefreshButtonState extends ConsumerState<_RefreshButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
   }
 
   @override
@@ -1005,7 +1093,8 @@ class _RefreshButtonState extends ConsumerState<_RefreshButton> with SingleTicke
                 try {
                   await widget.onRefresh!.call();
                 } finally {
-                  if (mounted) ref.read(refreshLoadingProvider.notifier).state = false;
+                  if (mounted)
+                    ref.read(refreshLoadingProvider.notifier).state = false;
                 }
               },
         tooltip: 'Refresh',

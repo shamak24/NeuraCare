@@ -28,6 +28,7 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
   bool _keto = false;
   List<CuisineType> _selectedCuisines = [];
   List<String> _allergies = [];
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -101,6 +102,8 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      if (_isSubmitting) return;
+      setState(() => _isSubmitting = true);
       final diet = Diet(
         vegan: _vegan,
         vegetarian: _vegetarian,
@@ -113,12 +116,15 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
       
       if(!await InternetConnection().hasInternetAccess) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('No internet connection'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          if (messenger != null) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: const Text('No internet connection'),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
         }
         return;
       }
@@ -128,36 +134,45 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
         ref.read(dietProvider.notifier).setDiet(diet);
         final dailymeals = await getDailyMealsData(ref.read(userProviderNotifier).token!);
         ref.read(dailyMealsProviderNotifier.notifier).setDailyMeals(dailymeals);
+        Navigator.of(context).pop();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 8),
-                  const Text('Diet preferences updated successfully!'),
-                ],
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          if (messenger != null) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 8),
+                    const Text('Diet preferences updated successfully!'),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                behavior: SnackBarBehavior.floating,
               ),
-              backgroundColor: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+            );
+          }
 
           // Navigate back
           Navigator.of(context).pop();
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error updating diet preferences: $e'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          if (messenger != null) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text('Error updating diet preferences: $e'),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
         }
+      } finally {
+        if (mounted) setState(() => _isSubmitting = false);
       }
     }
   }
@@ -654,7 +669,7 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: _submitForm,
+                        onPressed: _isSubmitting ? null : _submitForm,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: colorScheme.primary,
                           foregroundColor: colorScheme.onPrimary,
@@ -664,23 +679,34 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.save,
-                              size: 24,
-                              color: colorScheme.onPrimary,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              'Save Diet Preferences',
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onPrimary,
-                              ),
-                            ),
-                          ],
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 220),
+                          transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
+                          child: _isSubmitting
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(strokeWidth: 2.2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                                )
+                              : Row(
+                                  key: const ValueKey('save_label'),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.save,
+                                      size: 24,
+                                      color: colorScheme.onPrimary,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'Save Diet Preferences',
+                                      style: theme.textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
                     ),
