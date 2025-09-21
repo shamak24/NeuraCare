@@ -197,11 +197,13 @@ class MealsTab extends ConsumerWidget{
                             .withOpacity(0.7),
                       ),
                     ),
+                    
                   ],
                 ),
               ),
             ],
           ),
+          Center(child: Image(image: AssetImage('images/fullBodyMascot.png'),height: 160,))
         ],
       ),
     );

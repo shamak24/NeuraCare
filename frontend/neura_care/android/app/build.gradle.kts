@@ -50,4 +50,6 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation("androidx.window:window:1.0.0")
     implementation("androidx.window:window-java:1.0.0")
+    // Material Components for Android (provides Theme.MaterialComponents)
+    implementation("com.google.android.material:material:1.9.0")
 }

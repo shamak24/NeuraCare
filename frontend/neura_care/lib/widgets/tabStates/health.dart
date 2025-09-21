@@ -90,10 +90,21 @@ class _MedsTabState extends ConsumerState<MedsTab>
             child: CustomScrollView(
               slivers: [
                 // Header
+               
                 SliverToBoxAdapter(
                   child: _buildHeader(theme, isDark),
                 ),
-                
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Center(
+                      child: Image.asset(
+                        'images/fullBodyMascot.png',
+                        height: 160,
+                      ),
+                    ),
+                  ),
+                ),
                 // Medication Reminders Section
                 SliverToBoxAdapter(
                   child: _buildMedicationRemindersSection(theme, isDark, medList),

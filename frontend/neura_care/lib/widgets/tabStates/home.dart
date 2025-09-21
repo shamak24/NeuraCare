@@ -17,6 +17,73 @@ import 'package:neura_care/screens/detail/health_detail.dart';
 import 'package:neura_care/screens/mealDetail.dart';
 import 'package:neura_care/themes.dart';
 
+class _WobbleMascot extends StatefulWidget {
+  final String asset;
+  final double width;
+  final double height;
+  final Duration duration;
+
+  const _WobbleMascot({
+    Key? key,
+    required this.asset,
+    this.width = 60,
+    this.height = 60,
+    this.duration = const Duration(milliseconds: 1200),
+  }) : super(key: key);
+
+  @override
+  State<_WobbleMascot> createState() => _WobbleMascotState();
+}
+
+class _WobbleMascotState extends State<_WobbleMascot> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: widget.duration);
+    _anim = Tween<double>(begin: -0.06, end: 0.06).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+    _ctrl.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        // give a quick playful nudge when tapped
+        try {
+          await _ctrl.animateTo(1.0, duration: const Duration(milliseconds: 300));
+          await _ctrl.animateBack(0.0, duration: const Duration(milliseconds: 300));
+          _ctrl.repeat(reverse: true);
+        } catch (_) {}
+      },
+      child: AnimatedBuilder(
+        animation: _anim,
+        builder: (context, child) {
+          return Transform.rotate(
+            angle: _anim.value,
+            alignment: Alignment.bottomCenter,
+            child: child,
+          );
+        },
+        child: Image.asset(
+          widget.asset,
+          width: widget.width,
+          height: widget.height,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
 class HomeTab extends ConsumerWidget {
   const HomeTab({super.key});
 
@@ -135,34 +202,46 @@ class HomeTab extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome back, ${user.name}!",
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.primaryColor,
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Welcome back, ${user.name}!",
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Hope you're having a great day",
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: (isDark ? AppTheme.darkOnSurface : AppTheme.lightOnSurface)
+                                      .withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Hope you're having a great day",
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color:
-                              (isDark
-                                      ? AppTheme.darkOnSurface
-                                      : AppTheme.lightOnSurface)
-                                  .withOpacity(0.7),
+                        const SizedBox(width: 12),
+                        SizedBox(
+                          width: 120,
+                          child: _WobbleMascot(asset: 'images/fullBodyMascot.png', width: 120, height: 160),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 24),
-
-                // Health Score Section
                 GestureDetector(
                   onTap: () {
                     Navigator.push(

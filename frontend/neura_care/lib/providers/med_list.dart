@@ -26,8 +26,9 @@ class MedListProvider extends StateNotifier<MedList> {
   }
 
   Future<void> clearMeds() async {
-    state = MedList(meds: []);
     await clearMedList();
+    state = MedList(meds: []);
+    
   }
 }
 
