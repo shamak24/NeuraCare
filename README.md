@@ -49,7 +49,8 @@ Built as a **cross-platform Flutter app** with an **Express backend deployed on 
 ## 🔑 Unique Selling Points (USP)  
 ✨ **Holistic Care** → Multiple diseases, one platform  
 ✨ **AI-Driven Personalization** → Risk alerts, diet, lifestyle plans  
-✨ **Preventive Focus** → Early detection lowers costs & complications     
+✨ **Preventive Focus** → Early detection lowers costs & complications  
+✨ **All-in-one Platform** → Integrated everything in one single app  
 ---
 
 ## 🌍 Impact & Usefulness  
@@ -121,4 +122,4 @@ Licensed under the **MIT License** – see [LICENSE](./LICENSE).
 ---
 
 ## 🤝 Contributors  
-👩‍💻 **Team NeuraCare** – Building holistic, intelligent, and preventive health solutions.  
+👩‍💻 **Team CureTech** – Building holistic, intelligent, and preventive health solutions.  
