@@ -616,55 +616,64 @@ class _SetMedReminderScreenState extends ConsumerState<SetMedReminderScreen>
       // Set notification
       try {
         await setTimedNotification(newMed);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text("${widget.existingMed != null ? 'Updated' : 'Added'} medication and set reminder!"),
-                ],
+        if (context.mounted) {
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          if (messenger != null) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Text("${widget.existingMed != null ? 'Updated' : 'Added'} medication and set reminder!"),
+                  ],
+                ),
+                backgroundColor: AppTheme.healthGreen,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-              backgroundColor: AppTheme.healthGreen,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          );
+            );
+          }
         }
       } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Medication saved, but reminder failed: $e"),
-              backgroundColor: AppTheme.warningAmber,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+        if (context.mounted) {
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          if (messenger != null) {
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text("Medication saved, but reminder failed: $e"),
+                backgroundColor: AppTheme.warningAmber,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
       }
 
-      if (mounted) {
+      if (context.mounted) {
         Navigator.of(context).pop();
       }
     } catch (e) {
       print("Error saving medication: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error saving medication: $e"),
-            backgroundColor: AppTheme.errorRed,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+      if (context.mounted) {
+        final messenger = ScaffoldMessenger.maybeOf(context);
+        if (messenger != null) {
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text("Error saving medication: $e"),
+              backgroundColor: AppTheme.errorRed,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } finally {
       if (mounted) {
@@ -712,23 +721,26 @@ class _SetMedReminderScreenState extends ConsumerState<SetMedReminderScreen>
       
       await ref.read(medListProviderNotifier.notifier).updateMedList(updatedMeds);
       
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.delete, color: Colors.white),
-                SizedBox(width: 8),
-                Text("Medication deleted"),
-              ],
+      if (context.mounted) {
+        final messenger = ScaffoldMessenger.maybeOf(context);
+        if (messenger != null) {
+          messenger.showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.delete, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text("Medication deleted"),
+                ],
+              ),
+              backgroundColor: AppTheme.errorRed,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            backgroundColor: AppTheme.errorRed,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        );
+          );
+        }
       }
     }
   }

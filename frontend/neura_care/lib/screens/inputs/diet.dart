@@ -156,8 +156,7 @@ class _DietInputScreenState extends ConsumerState<DietInputScreen> with TickerPr
             );
           }
 
-          // Navigate back
-          Navigator.of(context).pop();
+     
         }
       } catch (e) {
         if (mounted) {
