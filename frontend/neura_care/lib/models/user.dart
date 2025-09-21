@@ -10,6 +10,7 @@ class User {
     this.token,
     required this.preventiveMeasures,
     required this.comorbidityAdvice,
+    required this.risks,
   });
   @HiveField(0)
   final String email;
@@ -23,21 +24,23 @@ class User {
   List<String> preventiveMeasures;
   @HiveField(5)
   String comorbidityAdvice;
+  @HiveField(6)
+  List<String> risks;
 
 
   factory User.empty() {
-    return User(email: '', name: '', healthScore: 0.0, token: null, preventiveMeasures: [], comorbidityAdvice: '');
+    return User(email: '', name: '', healthScore: 0.0, token: null, preventiveMeasures: [], comorbidityAdvice: '', risks: []);
   }
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(email: json['email'], name: json['name'], token: json['token'], healthScore: json['healthScore']?.toDouble() ?? 0.0, preventiveMeasures: List<String>.from(json['preventiveMeasures'] ?? []), comorbidityAdvice: json['comorbidityAdvice'] ?? '');
+    return User(email: json['email'], name: json['name'], token: json['token'], healthScore: json['healthScore']?.toDouble() ?? 0.0, preventiveMeasures: List<String>.from(json['preventiveMeasures'] ?? []), comorbidityAdvice: json['comorbidityAdvice'] ?? '', risks: List<String>.from(json['risks'] ?? []));
   }
   Map<String, dynamic> toJson() {
-    return {'email': email, 'name': name, 'token': token, 'healthScore': healthScore, 'preventiveMeasures': preventiveMeasures, 'comorbidityAdvice': comorbidityAdvice};
+    return {'email': email, 'name': name, 'token': token, 'healthScore': healthScore, 'preventiveMeasures': preventiveMeasures, 'comorbidityAdvice': comorbidityAdvice, 'risks': risks};
   }
 
   @override
   String toString() {
-    return 'User(email: $email, name: $name, token: $token, healthScore: $healthScore, preventiveMeasures: $preventiveMeasures, comorbidityAdvice: $comorbidityAdvice)';
+    return 'User(email: $email, name: $name, token: $token, healthScore: $healthScore, preventiveMeasures: $preventiveMeasures, comorbidityAdvice: $comorbidityAdvice, risks: $risks)';
   }
 
   @override
@@ -49,7 +52,8 @@ class User {
            other.token == token &&
            const ListEquality().equals(other.preventiveMeasures, preventiveMeasures) && 
            other.comorbidityAdvice == comorbidityAdvice && 
-           other.healthScore == healthScore;
+           other.healthScore == healthScore &&
+           const ListEquality().equals(other.risks, risks);
   }
 
   @override
@@ -59,6 +63,7 @@ class User {
            token.hashCode ^
            const ListEquality().hash(preventiveMeasures) ^ 
            comorbidityAdvice.hashCode ^ 
-           healthScore.hashCode;
+           healthScore.hashCode ^
+           const ListEquality().hash(risks);
   }
 }

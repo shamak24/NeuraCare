@@ -80,6 +80,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       } catch (e) {
         print('Error loading previous history: $e');
       }
+      
     }
 
     return MaterialApp(

@@ -25,6 +25,7 @@ class UserProvider extends StateNotifier<User> {
     state.healthScore = healthInfo['healthScore']?.toDouble() ?? 0.0;
     state.preventiveMeasures = List<String>.from(healthInfo['preventiveMeasures'] ?? []);
     state.comorbidityAdvice = healthInfo['comorbidityAdvice'] ?? '';
+    state.risks = List<String>.from(healthInfo['risks'] ?? []);
     await saveUser(state);
   }
   

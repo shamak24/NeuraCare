@@ -94,9 +94,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with TickerProviderSt
         _loadDiet(user.token!),
         _loadDailyMeals(user.token!),
         _loadPreviousHistory(user.token!),
+        (() async {
+          try {
+            final healthInfo = await getScore(user.token!);
+            user.healthScore = healthInfo['healthScore'].toDouble() ?? 0.0;
+            user.preventiveMeasures = List<String>.from(healthInfo['preventiveMeasures'] ?? []);
+            user.comorbidityAdvice = healthInfo['comorbidityAdvice'] ?? '';
+            user.risks = List<String>.from(healthInfo['risks'] ?? []);
+          } catch (e) {
+            print('Error fetching score: $e');
+          }
+        })(),
+
       ]);
       
       ref.read(userProviderNotifier.notifier).setUser(user);
+      
     } catch (e) {
       final msg = e.toString().replaceFirst('Exception: ', '');
       if (mounted) {

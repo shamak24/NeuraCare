@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:neura_care/providers/user.dart';
 import 'package:neura_care/models/user.dart';
+import 'package:neura_care/services/api.dart';
+import 'package:neura_care/providers/vitals.dart';
 
 class HealthDetailScreen extends ConsumerWidget {
   const HealthDetailScreen({super.key});
@@ -27,14 +29,29 @@ class HealthDetailScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
         
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _HealthHeaderDelegate(
-                minExtent: 140,
-                maxExtent: 280,
-                user: user,
-                theme: theme,
-              ),
+            // Consumer to provide WidgetRef for refresh action
+            Consumer(
+              builder: (context, ref, _) {
+                return SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _HealthHeaderDelegate(
+                    minExtent: 140,
+                    maxExtent: 280,
+                    user: user,
+                    theme: theme,
+                    onRefresh: () async {
+                      try {
+                        if (user.token == null) return;
+                        final healthData = await getScore(user.token!);
+                        // healthData expected to be a map with keys: healthScore, preventiveMeasures, comorbidityAdvice
+                        ref.read(userProviderNotifier.notifier).updateHealthInfo(healthData);
+                      } catch (e) {
+                        // optionally show a SnackBar or logging
+                      }
+                    },
+                  ),
+                );
+              },
             ),
 
             // Content
@@ -45,14 +62,18 @@ class HealthDetailScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8), // Extra spacing at top
-                    // User Info Card
-                    _buildUserInfoCard(context, theme, user),
+                    // User Info Card (now includes age & gender from vitals)
+                    _buildUserInfoCard(context, theme, user, ref),
                     
                     const SizedBox(height: 28), // Increased spacing
                     
                     // Preventive Measures Section
                     _buildPreventiveMeasuresSection(context, theme, user),
                     
+                    const SizedBox(height: 16),
+                    // Risks Section
+                    _buildRisksSection(context, theme, user),
+
                     const SizedBox(height: 28), // Increased spacing
                     
                     // Comorbidity Advice Section
@@ -60,6 +81,11 @@ class HealthDetailScreen extends ConsumerWidget {
                     
                     const SizedBox(height: 28), // Increased spacing
                     
+                    // Vitals Section (show after comorbidity advice)
+                    _buildVitalsSection(context, theme, ref),
+
+                    const SizedBox(height: 20),
+
                     // Health Score Breakdown
                     _buildHealthScoreBreakdown(context, theme, user),
                     
@@ -74,7 +100,87 @@ class HealthDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUserInfoCard(BuildContext context, ThemeData theme, User user) {
+  Widget _buildVitalsSection(BuildContext context, ThemeData theme, WidgetRef ref) {
+  final vitals = ref.watch(vitalsProviderNotifier);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.monitor_heart,
+                  color: theme.colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                'Vitals',
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              _vitalTile('BP', '${vitals.bpHigh}/${vitals.bpLow} mmHg', theme),
+              _vitalTile('HR', '${vitals.heartRate} bpm', theme),
+              _vitalTile('Sugar', '${vitals.sugarLevel} mg/dL', theme),
+              _vitalTile('Weight', '${vitals.weight} kg', theme),
+              _vitalTile('Cholesterol', '${vitals.cholesterol} mg/dL', theme),
+              _vitalTile('Sleep', '${vitals.sleepHours} hrs', theme),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _vitalTile(String label, String value, ThemeData theme) {
+    return Container(
+      width: 140,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceVariant.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+          const SizedBox(height: 6),
+          Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserInfoCard(BuildContext context, ThemeData theme, User user, WidgetRef ref) {
+    final vitals = ref.watch(vitalsProviderNotifier);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -167,6 +273,53 @@ class HealthDetailScreen extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       user.email,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Age',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${vitals.age}',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Gender',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      vitals.gender.isEmpty ? '—' : vitals.gender,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -302,6 +455,103 @@ class HealthDetailScreen extends ConsumerWidget {
                   ),
                 );
               },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRisksSection(BuildContext context, ThemeData theme, User user) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.errorContainer.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.warning_amber_rounded,
+                  color: theme.colorScheme.error,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Risks',
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Potential risk factors identified',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (user.risks.isEmpty) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.onSurfaceVariant,
+                    size: 32,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'No risks identified',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ] else ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: user.risks.map((r) {
+                return Chip(
+                  label: Text(r, style: theme.textTheme.bodySmall),
+                  backgroundColor: theme.colorScheme.errorContainer,
+                  avatar: Icon(Icons.health_and_safety, size: 18, color: theme.colorScheme.onErrorContainer),
+                );
+              }).toList(),
             ),
           ],
         ],
@@ -546,12 +796,14 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double _maxExtent;
   final User user;
   final ThemeData theme;
+  final Future<void> Function()? onRefresh;
 
   _HealthHeaderDelegate({
     required double minExtent,
     required double maxExtent,
     required this.user,
     required this.theme,
+    this.onRefresh,
   })  : _minExtent = minExtent,
         _maxExtent = maxExtent;
 
@@ -656,6 +908,19 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
                     ),
                   ),
                 ),
+                // Refresh animated button overlay
+                if (onRefresh != null)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: _RefreshButton(onRefresh: onRefresh, theme: theme),
+                    ),
+                  ),
               ],
             );
           },
@@ -676,5 +941,70 @@ class _HealthHeaderDelegate extends SliverPersistentHeaderDelegate {
         oldDelegate._maxExtent != _maxExtent ||
         oldDelegate._minExtent != _minExtent ||
         oldDelegate.theme != theme;
+  }
+}
+
+// Local provider to track refresh loading state for the header
+final refreshLoadingProvider = StateProvider<bool>((ref) => false);
+
+class _RefreshButton extends ConsumerStatefulWidget {
+  final Future<void> Function()? onRefresh;
+  final ThemeData theme;
+  const _RefreshButton({this.onRefresh, required this.theme});
+
+  @override
+  ConsumerState<_RefreshButton> createState() => _RefreshButtonState();
+}
+
+class _RefreshButtonState extends ConsumerState<_RefreshButton> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLoading = ref.watch(refreshLoadingProvider);
+
+    // Start/stop controller based on loading state
+    if (isLoading) {
+      if (!_controller.isAnimating) {
+        _controller.repeat();
+      }
+    } else {
+      if (_controller.isAnimating) {
+        _controller.stop(canceled: false);
+        _controller.value = 0.0;
+      }
+    }
+
+    return RotationTransition(
+      turns: _controller,
+      child: IconButton(
+        icon: Icon(Icons.refresh, color: widget.theme.colorScheme.onSurface),
+        onPressed: widget.onRefresh == null
+            ? null
+            : () async {
+                // avoid double taps
+                if (ref.read(refreshLoadingProvider)) return;
+                ref.read(refreshLoadingProvider.notifier).state = true;
+                try {
+                  await widget.onRefresh!.call();
+                } finally {
+                  if (mounted) ref.read(refreshLoadingProvider.notifier).state = false;
+                }
+              },
+        tooltip: 'Refresh',
+      ),
+    );
   }
 }
